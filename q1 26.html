@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Price Index Tracker – Global Property Guide 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f12;
+  --surface:#141720;
+  --surface2:#1c2030;
+  --border:#2a2f3d;
+  --border2:#3a4055;
+  --text:#e8eaf0;
+  --text2:#8b90a0;
+  --text3:#555c70;
+  --accent:#4f8ef7;
+  --accent2:#2563eb;
+  --pos:#22c97a;
+  --pos-bg:rgba(34,201,122,0.08);
+  --neg:#f25c5c;
+  --neg-bg:rgba(242,92,92,0.08);
+  --na:#555c70;
+  --head-bg:#0a0c10;
+  --row-hover:#1a1f2e;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  font-size:13px;
+  line-height:1.5;
+  min-height:100vh;
+}
+
+/* ── Header ── */
+.header{
+  background:var(--head-bg);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px 12px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.header-left{}
+.badge-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:4px;
+}
+.badge{
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:2px 8px;
+  border-radius:3px;
+  border:1px solid var(--border2);
+  color:var(--text2);
+}
+.badge.live{border-color:#22c97a44;color:#22c97a;background:rgba(34,201,122,.06)}
+h1{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--text);
+}
+h1 span{color:var(--text2);font-weight:300}
+.header-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.update-label{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text2);
+}
+.update-label strong{color:var(--accent);font-weight:500}
+.delay-note{
+  font-size:11px;
+  color:var(--text3);
+  font-style:italic;
+}
+
+/* ── Controls ── */
+.controls{
+  padding:10px 20px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.search-wrap{
+  position:relative;
+  flex:1;
+  min-width:160px;
+  max-width:260px;
+}
+.search-wrap svg{
+  position:absolute;
+  left:9px;top:50%;transform:translateY(-50%);
+  color:var(--text3);
+  pointer-events:none;
+}
+input[type=search]{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:6px 10px 6px 30px;
+  font-family:var(--sans);
+  font-size:12px;
+  color:var(--text);
+  outline:none;
+  transition:border-color .15s;
+}
+input[type=search]:focus{border-color:var(--border2)}
+input[type=search]::placeholder{color:var(--text3)}
+select{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:6px 26px 6px 10px;
+  font-family:var(--sans);
+  font-size:12px;
+  color:var(--text);
+  outline:none;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555c70'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 8px center;
+  cursor:pointer;
+  transition:border-color .15s;
+}
+select:focus{border-color:var(--border2)}
+.controls-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.count{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text3);
+}
+.count strong{color:var(--text2)}
+
+/* ── Table wrapper ── */
+.table-wrap{
+  overflow-x:auto;
+  overflow-y:auto;
+  max-height:calc(100vh - 130px);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+col.c-country{width:180px}
+col.c-pct{width:82px}
+col.c-desc{width:260px}
+col.c-freq{width:88px}
+col.c-src{width:180px}
+
+thead{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--head-bg);
+}
+thead tr:first-child th{
+  padding:8px 12px 4px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--text3);
+  font-weight:400;
+  border-bottom:none;
+}
+thead tr:first-child th.banner-main{
+  font-size:10px;
+  color:var(--text2);
+  letter-spacing:.04em;
+  text-transform:none;
+  font-family:var(--sans);
+  font-weight:400;
+}
+thead tr:first-child th.banner-right{
+  text-align:right;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--accent);
+  font-weight:500;
+  letter-spacing:.04em;
+}
+thead tr.col-headers th{
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:500;
+  color:var(--text2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  white-space:nowrap;
+  user-select:none;
+  transition:color .12s;
+}
+thead tr.col-headers th:hover{color:var(--text)}
+thead tr.col-headers th .sort-arrow{
+  display:inline-block;
+  margin-left:4px;
+  opacity:0;
+  font-size:10px;
+  transition:opacity .12s;
+}
+thead tr.col-headers th:hover .sort-arrow,
+thead tr.col-headers th.sorted .sort-arrow{opacity:1;color:var(--accent)}
+thead tr.col-headers th.sorted{color:var(--accent)}
+thead tr.col-headers th.right{text-align:right}
+thead tr.col-headers th.center{text-align:center}
+
+tbody tr{
+  border-bottom:1px solid var(--border);
+  transition:background .1s;
+}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--row-hover)}
+
+td{
+  padding:8px 12px;
+  vertical-align:middle;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+td.country-cell{
+  font-weight:500;
+  color:var(--text);
+  font-size:13px;
+}
+td.pct-cell{
+  font-family:var(--mono);
+  font-size:12px;
+  text-align:right;
+  font-weight:500;
+}
+td.pct-cell.pos{
+  color:var(--pos);
+  background:var(--pos-bg);
+}
+td.pct-cell.neg{
+  color:var(--neg);
+  background:var(--neg-bg);
+}
+td.pct-cell.na{
+  color:var(--na);
+  text-align:center;
+  font-weight:400;
+  font-size:11px;
+}
+td.desc-cell{
+  color:var(--text2);
+  font-size:12px;
+  white-space:normal;
+  line-height:1.4;
+}
+td.freq-cell{
+  color:var(--text3);
+  font-size:11px;
+  font-family:var(--mono);
+  text-align:center;
+}
+td.freq-cell .pill{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:3px;
+  font-size:10px;
+  letter-spacing:.04em;
+  border:1px solid var(--border);
+  color:var(--text3);
+}
+td.freq-cell .pill.monthly{border-color:#4f8ef744;color:#4f8ef7;background:rgba(79,142,247,.06)}
+td.freq-cell .pill.quarterly{border-color:#8b90a033;color:var(--text2);background:rgba(139,144,160,.04)}
+td.freq-cell .pill.semiannual{border-color:#f2a63c44;color:#f2a63c;background:rgba(242,166,60,.06)}
+td.src-cell{
+  font-size:11px;
+  color:var(--text3);
+}
+
+.no-results{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--text3);
+  font-size:13px;
+}
+
+/* scrollbar */
+.table-wrap::-webkit-scrollbar{width:6px;height:6px}
+.table-wrap::-webkit-scrollbar-track{background:var(--surface)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="badge-row">
+      <span class="badge live">● Live</span>
+      <span class="badge">Updated quarterly</span>
+    </div>
+    <h1>House Price Index Tracker <span>/ Global Property Guide</span></h1>
+  </div>
+  <div class="header-right">
+    <span class="update-label">Latest update: <strong>2026, Q1</strong></span>
+    <span class="delay-note">Most countries' data is released with a delay of 2+ quarters</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="search" placeholder="Search country…" autocomplete="off">
+  </div>
+  <select id="freq-filter">
+    <option value="">All frequencies</option>
+    <option value="monthly">Monthly</option>
+    <option value="quarterly">Quarterly</option>
+    <option value="semi-annual">Semi-annual</option>
+  </select>
+  <select id="perf-filter">
+    <option value="">All performance</option>
+    <option value="pos">1Y positive</option>
+    <option value="neg">1Y negative</option>
+  </select>
+  <div class="controls-right">
+    <span class="count" id="count-label"><strong>77</strong> countries</span>
+  </div>
+</div>
+
+<div class="table-wrap">
+<table id="main-table">
+<colgroup>
+  <col class="c-country">
+  <col class="c-pct"><col class="c-pct"><col class="c-pct"><col class="c-pct"><col class="c-pct"><col class="c-pct">
+  <col class="c-desc">
+  <col class="c-freq">
+  <col class="c-src">
+</colgroup>
+<thead>
+  <tr>
+    <th colspan="1"></th>
+    <th colspan="6" class="banner-main">Nominal price change (inflation-adjusted columns available in full dataset)</th>
+    <th colspan="2"></th>
+    <th class="banner-right">2026, Q1</th>
+  </tr>
+  <tr class="col-headers">
+    <th data-col="0">Country <span class="sort-arrow">↕</span></th>
+    <th data-col="1" class="right">1 Year <span class="sort-arrow">↕</span></th>
+    <th data-col="2" class="right">2 Years <span class="sort-arrow">↕</span></th>
+    <th data-col="3" class="right">3 Years <span class="sort-arrow">↕</span></th>
+    <th data-col="4" class="right">5 Years <span class="sort-arrow">↕</span></th>
+    <th data-col="5" class="right">10 Years <span class="sort-arrow">↕</span></th>
+    <th data-col="6" class="right">15 Years <span class="sort-arrow">↕</span></th>
+    <th data-col="7">Index description <span class="sort-arrow">↕</span></th>
+    <th data-col="8" class="center">Frequency <span class="sort-arrow">↕</span></th>
+    <th data-col="9">Source <span class="sort-arrow">↕</span></th>
+  </tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+const RAW = [
+["Andorra","18.09%","32.90%","48.31%","78.68%","n.a.","n.a.","Average price sale (€/m²)","Monthly","Indomio"],
+["Argentina","3.80%","11.43%","7.09%","-12.13%","3.59%","34.73%","Average listing price per square meter (in US dollars) of used two-bedroom apartments for sale","Quarterly","IDECBA"],
+["Australia","3.87%","6.90%","12.65%","54.97%","64.88%","144.90%","Median Dwelling Price, Eight Capital Cities","Quarterly","Australian Bureau of Statistics"],
+["Austria","1.82%","-1.76%","-5.68%","13.99%","44.59%","106.28%","Real estate price index, Vienna, 2000=100 (in Ones Index)","Quarterly","Oesterreichische Nationalbank"],
+["Belgium","4.68%","4.72%","7.11%","23.79%","47.38%","63.45%","Residential Property Price Index, Existing Dwellings","Quarterly","European Central Bank"],
+["Bosnia and Herzegovina","2.99%","11.26%","15.69%","81.28%","n.a.","n.a.","Prices of new apartments sold, average price per SQM (BAM)","Quarterly","BHAS"],
+["Brazil","4.57%","11.53%","16.76%","27.73%","40.49%","158.82%","FipeZap Price Index of Real Estate, Sao Paulo","Monthly","FIPE"],
+["Bulgaria","15.37%","34.40%","46.77%","84.43%","158.05%","142.94%","House price index, all dwellings","Quarterly","National Statistical Institute"],
+["Cambodia","-2.07%","1.49%","0.57%","-16.39%","n.a.","n.a.","Average price of high-end condominium unit, Phnom Penh","Quarterly","CBRE Cambodia"],
+["Canada","-6.16%","-2.70%","0.30%","17.72%","65.25%","111.77%","Teranet- National Bank House Price Index, Composite 11 cities","Monthly","Teranet- National Bank of Canada"],
+["Chile","8.10%","10.61%","13.66%","60.31%","115.38%","288.19%","House Price Index for new homes","Monthly","Chilean Chamber of Construction"],
+["China","-8.50%","-12.62%","-14.54%","-3.86%","34.37%","n.a.","Price Indices of Second-Hand Residential Buildings, Beijing","Monthly","NBSC"],
+["Colombia","4.52%","9.58%","16.16%","38.64%","91.72%","227.44%","New Home Price Index, Bogota","Monthly","Banco de la Republica Colombia"],
+["Costa Rica","10.33%","17.76%","27.41%","22.83%","n.a.","n.a.","Average square meter price of apartments in San José","Monthly","Encuentra24"],
+["Croatia","13.79%","27.75%","41.63%","77.32%","130.39%","110.07%","Property price index, all dwellings","Quarterly","Croatian National Bank"],
+["Cyprus","5.03%","11.87%","20.33%","29.38%","37.82%","2.63%","Residential Property Price Index","Quarterly","Central Bank of Cyprus"],
+["Czech Republic","10.81%","17.62%","13.49%","60.23%","147.51%","161.83%","Residential Property Index","Quarterly","Czech CSO"],
+["Denmark","13.31%","17.58%","17.30%","32.29%","74.09%","112.80%","Square meter prices of owner-occupied flats","Quarterly","Finans Danmark"],
+["Dominican Republic","10.25%","24.02%","21.98%","n.a.","n.a.","n.a.","Average Square Meter Price in DOP, Apartments","Monthly","Properstar"],
+["Egypt","-4.90%","19.63%","77.39%","97.14%","121.47%","n.a.","Aqarmap Real estate index","Monthly","Aqarmap Real estate index"],
+["Estonia","5.19%","11.97%","16.26%","69.36%","122.81%","237.25%","Dwelling Price Index","Quarterly","Statistical Office of Estonia"],
+["Finland","-0.86%","-2.99%","-6.06%","-2.62%","7.90%","18.08%","Average Price per Square Meter (EUR) in Old Dwellings","Quarterly","Statistics Finland"],
+["France","0.63%","-3.35%","-5.23%","8.47%","25.54%","23.83%","Price index of second-hand dwellings - Metropolitan France","Quarterly","INSEE"],
+["Georgia","3.27%","13.97%","28.57%","48.65%","n.a.","n.a.","Residential Property Price Index","Quarterly","National Statistics Office of Georgia"],
+["Germany","3.29%","4.06%","-6.84%","9.69%","53.29%","82.56%","New and Existing Residential Property","Quarterly","Destatis"],
+["Greece","7.69%","16.32%","31.77%","62.69%","83.90%","19.87%","Residential Dwellings, Urban Areas","Quarterly","Bank of Greece"],
+["Hong Kong","1.99%","-5.89%","-12.09%","-21.89%","1.33%","81.61%","Private Domestic Price Index, All classes","Monthly","Rating and Valuation Department"],
+["Hungary","21.29%","38.39%","46.14%","104.09%","307.51%","318.81%","Aggregated House Price Index","Quarterly","MNB"],
+["Iceland","3.65%","12.68%","17.45%","63.65%","159.25%","268.31%","House Price Index","Quarterly","Statistics Iceland"],
+["India","2.20%","5.58%","10.90%","17.01%","52.94%","249.54%","RBI House Price Index, All Dwellings, 10 Major Cities Average","Quarterly","Reserve Bank of India"],
+["Indonesia","0.84%","2.31%","4.32%","7.84%","22.04%","n.a.","Residential Property Price Index, Composite 18 Cities","Quarterly","Bank Indonesia"],
+["Ireland","6.63%","16.83%","20.37%","49.04%","96.41%","103.11%","Residential Property Price Index","Monthly","Central Statistics Office"],
+["Israel","0.10%","7.66%","5.33%","38.30%","59.51%","120.21%","Residential Dwelling Prices","Quarterly","Central Bureau of Statistics"],
+["Italy","3.81%","7.73%","9.54%","17.33%","16.29%","-1.43%","House Price Index","Quarterly","ECB"],
+["Japan","3.54%","9.66%","17.98%","44.58%","78.82%","103.51%","Urban Land Price Index","Semi-annual","Japan Real Estate Institute"],
+["Kazakhstan","15.74%","19.19%","23.24%","66.01%","85.96%","n.a.","Residential Property Price Index","Quarterly","Statistics Committee of Kazakhstan"],
+["Latvia","4.24%","4.00%","-3.59%","9.80%","35.53%","62.39%","Apartment Price Index, Riga","Quarterly","Latio"],
+["Lithuania","11.34%","15.34%","17.33%","71.02%","116.63%","126.29%","Apartment Price Index","Quarterly","Registrų Centras"],
+["Luxembourg","3.01%","-0.80%","-9.28%","10.07%","65.14%","100.85%","Average Price by Floor Area (EUR/m2)","Quarterly","Statec Luxembourg"],
+["Macau","-9.19%","-21.15%","-23.48%","-28.77%","-14.46%","n.a.","Residential Property Price Index","Quarterly","Statistics and Census Service"],
+["Malaysia","0.09%","4.42%","7.86%","14.61%","37.10%","124.61%","House Price Index","Quarterly","Valuation and Property Services Department"],
+["Malta","6.87%","11.24%","18.82%","21.54%","92.06%","121.52%","Property Prices Index Based on Advertised Prices","Quarterly","Central Bank of Malta"],
+["Mauritius","13.89%","39.83%","95.74%","92.85%","n.a.","n.a.","Property Prices Index, Houses and Apartments","Quarterly","Statistics Mauritius"],
+["Mexico","8.90%","18.88%","31.23%","56.02%","121.74%","n.a.","SHF House Price Index","Quarterly","Sociedad Hipotecaria Federal"],
+["Moldova","34.16%","58.62%","59.76%","114.13%","n.a.","n.a.","Moldova (Chisinau) House Price Index","Quarterly","National Bank of Moldova"],
+["Montenegro","20.17%","35.61%","68.92%","154.34%","100.54%","n.a.","Prices of dwellings in new residential buildings","Quarterly","Statistical Office of Montenegro"],
+["Morocco","1.20%","0.69%","0.58%","-4.55%","n.a.","n.a.","Residential Property Price Index","Quarterly","Bank Al-Maghrib"],
+["Netherlands","3.51%","15.14%","22.74%","37.16%","121.34%","116.75%","Median Transaction Price","Quarterly","NVM"],
+["New Zealand","-0.21%","-0.88%","-4.90%","18.84%","64.99%","133.49%","House Price Index","Quarterly","Reserve Bank of New Zealand"],
+["North Macedonia","24.98%","38.18%","47.70%","98.17%","115.61%","96.29%","House Price Index: Advertised Price of Apartments in Skopje","Quarterly","National Bank of Macedonia"],
+["Norway","5.94%","11.07%","10.26%","22.67%","52.88%","97.01%","Price of Existing Dwellings","Quarterly","Statistics Norway"],
+["Peru","4.07%","4.14%","5.28%","4.70%","8.83%","78.74%","Hedonic property price index","Quarterly","Central Reserve Bank of Peru"],
+["Philippines","1.90%","-0.41%","12.39%","27.29%","n.a.","n.a.","Residential Real Estate Price Index","Quarterly","Bangko Sentral ng Pilipinas"],
+["Poland","0.11%","17.66%","26.08%","62.68%","119.77%","113.26%","Residential Property Prices, Primary Market, Transaction Prices, 7 cities","Quarterly","Central Bank of Poland"],
+["Portugal","23.25%","37.60%","52.93%","103.03%","239.91%","207.70%","Residential property, All dwelling types, new and existing","Quarterly","European Central Bank"],
+["Puerto Rico","-4.03%","8.95%","12.46%","32.15%","36.46%","10.07%","Purchase-only House Price Index, Developmental index, NSA","Quarterly","FHFA"],
+["Qatar","-0.03%","-2.38%","-1.44%","6.01%","-24.62%","n.a.","Real Estate Price Index","Quarterly","Ministry of Justice Qatar"],
+["Romania","14.91%","31.00%","39.76%","63.34%","158.55%","n.a.","Residential Property Price Index","Quarterly","National Bank of Romania"],
+["Russia","18.96%","55.31%","71.68%","173.44%","302.68%","n.a.","Average price per sqm, Russia","Quarterly","Federal State Statistics Service"],
+["Saudi Arabia","1.29%","3.90%","6.54%","n.a.","n.a.","n.a.","Real Estate Price Index","Quarterly","General Authority for Statistics"],
+["Serbia","11.19%","16.40%","26.39%","62.69%","n.a.","n.a.","House price index, new and existing apartments","Quarterly","RGZ"],
+["Singapore","3.34%","7.39%","14.74%","37.83%","52.82%","55.46%","Property Price Index, Private Residential","Quarterly","Urban Redevelopment Authority"],
+["Slovakia","11.67%","15.42%","3.68%","57.03%","126.39%","119.50%","Slovakia House Price Index: Flats and Houses, Average Price per Square Meter in EUR","Quarterly","National Bank of Slovakia"],
+["Slovenia","2.72%","11.11%","17.36%","52.62%","109.61%","77.66%","House Price Index, Total","Quarterly","Statistical Office of Slovenia"],
+["South Africa","4.50%","5.13%","5.97%","18.03%","41.90%","88.44%","Lightstone Property Price Index","Monthly","Lightstone"],
+["South Korea","1.02%","1.12%","-2.43%","2.18%","10.92%","22.52%","House Price Index","Monthly","Kookmin Bank"],
+["Spain","12.10%","18.81%","23.76%","32.96%","45.89%","17.54%","Average Price Per m2 for Open-market Appraised Housing","Quarterly","Banco de España"],
+["Sweden","0.86%","2.94%","-3.76%","7.27%","38.16%","74.03%","Residential Property Price Index","Quarterly","ECB"],
+["Switzerland","4.52%","8.93%","12.24%","25.99%","37.70%","72.05%","Real Estate Price Index, Privately owned apartments, Transaction price","Quarterly","Swiss National Bank"],
+["Taiwan","-3.66%","6.39%","14.92%","41.76%","59.50%","116.48%","Home Price Index, All Residential Dwellings","Quarterly","Sinyi Real Estate Planning and Research"],
+["Thailand","0.63%","3.29%","6.03%","13.70%","30.30%","n.a.","Housing Price Index, Nationwide","Quarterly","Bank of Thailand"],
+["Ukraine","2.16%","3.96%","5.83%","11.32%","-0.17%","-34.66%","Residential Property Price Index, Kyiv","Quarterly","National Bank of Ukraine"],
+["United Arab Emirates","12.88%","33.24%","60.07%","91.54%","46.41%","143.23%","Residential Property Price Index, Dubai","Quarterly","Dubai Land Department"],
+["United Kingdom","2.47%","4.95%","2.16%","19.56%","44.11%","74.04%","House Price Index","Monthly","HM Land Registry"],
+["United States","1.36%","5.14%","10.58%","41.27%","86.75%","130.82%","S&P CoreLogic Case-Shiller Home Price Index","Monthly","S&P Dow Jones Indices"],
+["Uruguay","2.76%","3.21%","9.87%","35.10%","n.a.","n.a.","Residential Property Price Index","Quarterly","Instituto Nacional de Estadistica"],
+["Vietnam","24.33%","26.07%","29.04%","63.92%","n.a.","n.a.","Average Price for New Apartments, HCMC","Quarterly","JLL"]
+];
+
+function parsePct(s){
+  if(!s||s==='n.a.')return null;
+  return parseFloat(s.replace('%',''));
+}
+
+function pctCell(val){
+  if(val==='n.a.'||!val) return `<td class="pct-cell na">—</td>`;
+  const n=parsePct(val);
+  const cls=n>=0?'pos':'neg';
+  const sign=n>0?'+':'';
+  return `<td class="pct-cell ${cls}">${sign}${val}</td>`;
+}
+
+function freqPill(f){
+  const lower=f.toLowerCase();
+  let cls='';
+  if(lower.includes('month'))cls='monthly';
+  else if(lower.includes('quarter'))cls='quarterly';
+  else if(lower.includes('semi')||lower.includes('annual'))cls='semiannual';
+  return `<span class="pill ${cls}">${f}</span>`;
+}
+
+let sortCol=-1,sortDir=1;
+let data=[...RAW];
+
+function render(rows){
+  const tbody=document.getElementById('tbody');
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="10" class="no-results">No countries match the current filters.</td></tr>`;
+    document.getElementById('count-label').innerHTML=`<strong>0</strong> countries`;
+    return;
+  }
+  document.getElementById('count-label').innerHTML=`<strong>${rows.length}</strong> of ${RAW.length} countries`;
+  tbody.innerHTML=rows.map((r,i)=>`
+<tr class="${i%2===1?'even':''}">
+  <td class="country-cell">${r[0]}</td>
+  ${pctCell(r[1])}${pctCell(r[2])}${pctCell(r[3])}${pctCell(r[4])}${pctCell(r[5])}${pctCell(r[6])}
+  <td class="desc-cell">${r[7]}</td>
+  <td class="freq-cell">${freqPill(r[8])}</td>
+  <td class="src-cell">${r[9]}</td>
+</tr>`).join('');
+}
+
+function applyFilters(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const freq=document.getElementById('freq-filter').value.toLowerCase();
+  const perf=document.getElementById('perf-filter').value;
+  let rows=RAW.filter(r=>{
+    if(q&&!r[0].toLowerCase().includes(q)&&!r[9].toLowerCase().includes(q))return false;
+    if(freq&&!r[8].toLowerCase().includes(freq))return false;
+    if(perf){
+      const n=parsePct(r[1]);
+      if(perf==='pos'&&(n===null||n<0))return false;
+      if(perf==='neg'&&(n===null||n>=0))return false;
+    }
+    return true;
+  });
+  if(sortCol>=0){
+    rows.sort((a,b)=>{
+      let av=a[sortCol],bv=b[sortCol];
+      if(sortCol>=1&&sortCol<=6){
+        const an=parsePct(av),bn=parsePct(bv);
+        if(an===null&&bn===null)return 0;
+        if(an===null)return 1;
+        if(bn===null)return -1;
+        return(an-bn)*sortDir;
+      }
+      return av.localeCompare(bv)*sortDir;
+    });
+  }
+  render(rows);
+}
+
+document.getElementById('search').addEventListener('input',applyFilters);
+document.getElementById('freq-filter').addEventListener('change',applyFilters);
+document.getElementById('perf-filter').addEventListener('change',applyFilters);
+
+document.querySelectorAll('thead tr.col-headers th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=parseInt(th.dataset.col);
+    if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=1}
+    document.querySelectorAll('thead tr.col-headers th').forEach(t=>{
+      t.classList.remove('sorted');
+      t.querySelector('.sort-arrow').textContent='↕';
+    });
+    th.classList.add('sorted');
+    th.querySelector('.sort-arrow').textContent=sortDir===1?'↑':'↓';
+    applyFilters();
+  });
+});
+
+render(RAW);
+</script>
+</body>
+</html>
