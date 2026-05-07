@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Индекс налоговой конкурентоспособности ОЭСР 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f12;--surface:#141720;--surface2:#1c2030;
+  --border:#2a2f3d;--border2:#3a4055;
+  --text:#e8eaf0;--text2:#8b90a0;--text3:#555c70;
+  --accent:#4f8ef7;--head-bg:#0a0c10;--row-hover:#1a1f2e;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --green:#22c97a;--green-bg:rgba(34,201,122,.08);
+  --amber:#f2a63c;--amber-bg:rgba(242,166,60,.08);
+  --red:#f25c5c;--red-bg:rgba(242,92,92,.08);
+  --blue:#4f8ef7;--blue-bg:rgba(79,142,247,.08);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,.08);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+/* ─── TOP NAV ─── */
+.top-nav{
+  background:var(--head-bg);border-bottom:1px solid var(--border);
+  padding:0 20px;display:flex;align-items:stretch;gap:0;
+}
+.nav-brand{
+  padding:14px 20px 14px 0;border-right:1px solid var(--border);
+  margin-right:16px;
+}
+.nav-brand h1{font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.nav-brand p{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:.04em;margin-top:2px}
+.nav-tabs{display:flex;align-items:stretch;gap:0;flex:1}
+.nav-tab{
+  padding:0 22px;cursor:pointer;font-size:12px;font-weight:400;
+  color:var(--text2);border-bottom:2px solid transparent;
+  display:flex;align-items:center;gap:8px;
+  transition:all .15s;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,.02)}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--accent);font-weight:500}
+.nav-tab .tab-num{
+  font-family:var(--mono);font-size:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  padding:1px 6px;border-radius:3px;color:var(--text3);
+}
+.nav-tab.active .tab-num{background:var(--blue-bg);border-color:var(--accent);color:var(--accent)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--text2)}
+.badge.green{border-color:#22c97a44;color:#22c97a;background:rgba(34,201,122,.06)}
+
+/* ─── SCREENS ─── */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ══════════════════════════
+   SCREEN 1 — ARTICLE
+══════════════════════════ */
+.article-wrap{max-width:860px;margin:0 auto;padding:32px 24px 60px}
+
+.article-hero{
+  border:1px solid var(--border);border-radius:10px;
+  background:var(--surface);padding:28px 32px;margin-bottom:32px;
+}
+.article-hero-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.article-hero h2{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px;line-height:1.3}
+.article-hero-meta{
+  display:flex;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.04em;
+}
+.article-hero-meta span b{color:var(--text2)}
+
+.section-title{
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin:0 0 16px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+.key-points{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.kp{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:14px 18px;display:flex;gap:14px;align-items:flex-start;
+}
+.kp-icon{
+  width:32px;height:32px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px;
+}
+.kp-body{}
+.kp-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.kp-text{font-size:12px;color:var(--text2);line-height:1.6}
+
+.leaders-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:32px}
+.leader-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:16px 18px;
+}
+.leader-rank{
+  font-family:var(--mono);font-size:10px;color:var(--text3);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;
+}
+.leader-country{font-size:15px;font-weight:600;margin-bottom:6px}
+.leader-score{
+  font-family:var(--mono);font-size:20px;font-weight:500;color:var(--accent);
+  margin-bottom:8px;
+}
+.leader-text{font-size:11px;color:var(--text2);line-height:1.5}
+.leader-card.best{border-color:#22c97a44;background:rgba(34,201,122,.04)}
+.leader-card.best .leader-score{color:var(--green)}
+.leader-card.worst{border-color:#f25c5c33;background:rgba(242,92,92,.04)}
+.leader-card.worst .leader-score{color:var(--red)}
+
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:32px}
+.cat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;
+}
+.cat-name{font-size:12px;font-weight:500;margin-bottom:5px}
+.cat-desc{font-size:11px;color:var(--text2);line-height:1.5}
+.cat-impact{
+  display:inline-block;margin-top:7px;font-family:var(--mono);
+  font-size:9px;letter-spacing:.06em;padding:2px 7px;border-radius:3px;
+}
+.impact-high{background:var(--red-bg);color:var(--red);border:1px solid rgba(242,92,92,.2)}
+.impact-mid{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(242,166,60,.2)}
+.impact-low{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,201,122,.2)}
+
+.conclusions{display:flex;flex-direction:column;gap:10px}
+.concl{
+  background:var(--surface2);border-left:3px solid var(--border2);
+  border-radius:0 6px 6px 0;padding:12px 16px;
+  font-size:12px;color:var(--text2);line-height:1.6;
+}
+.concl b{color:var(--text);font-weight:500}
+.concl.accent{border-left-color:var(--accent)}
+.concl.green{border-left-color:var(--green)}
+.concl.red{border-left-color:var(--red)}
+.concl.amber{border-left-color:var(--amber)}
+
+/* ══════════════════════════
+   SCREEN 2 — TABLE
+══════════════════════════ */
+.table-header{
+  padding:12px 20px;background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+}
+.search-wrap{position:relative;min-width:180px;max-width:240px;flex:1}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+input[type=search]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px 6px 30px;font-family:var(--sans);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+input[type=search]:focus{border-color:var(--border2)}
+input[type=search]::placeholder{color:var(--text3)}
+select{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 26px 6px 10px;font-family:var(--sans);font-size:12px;color:var(--text);outline:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555c70'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.count{font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.count strong{color:var(--text2)}
+
+.legend-bar{
+  padding:8px 20px;background:var(--surface2);border-bottom:1px solid var(--border);
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--text3);
+}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+
+.table-wrap{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 185px)}
+table{width:100%;border-collapse:collapse}
+col.c-rank{width:48px}
+col.c-country{width:160px}
+col.c-score{width:90px}
+col.c-corp{width:80px}
+col.c-ind{width:80px}
+col.c-cons{width:90px}
+col.c-prop{width:90px}
+col.c-cross{width:100px}
+col.c-bar{width:180px}
+
+thead{position:sticky;top:0;z-index:10;background:var(--head-bg)}
+thead tr.sub-header th{
+  padding:5px 12px 3px;font-family:var(--mono);font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+  font-weight:400;border-bottom:none;white-space:nowrap;
+}
+thead tr.col-headers th{
+  padding:7px 12px;font-size:11px;font-weight:500;color:var(--text2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  cursor:pointer;white-space:nowrap;user-select:none;transition:color .12s;
+}
+thead tr.col-headers th:hover{color:var(--text)}
+thead tr.col-headers th .sa{display:inline-block;margin-left:3px;opacity:0;font-size:10px}
+thead tr.col-headers th:hover .sa,thead tr.col-headers th.sorted .sa{opacity:1;color:var(--accent)}
+thead tr.col-headers th.sorted{color:var(--accent)}
+thead tr.col-headers th.r{text-align:right}
+thead tr.col-headers th.c{text-align:center}
+
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--row-hover)}
+td{padding:7px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+td.td-rank{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right}
+td.td-country{font-weight:500;font-size:13px}
+td.td-score{font-family:var(--mono);font-size:12px;font-weight:600;text-align:right}
+td.td-score.top{color:var(--green)}
+td.td-score.mid{color:var(--amber)}
+td.td-score.bot{color:var(--red)}
+td.td-rank-sub{font-family:var(--mono);font-size:11px;text-align:center;color:var(--text2)}
+td.td-rank-sub.best{color:var(--green);background:var(--green-bg)}
+td.td-rank-sub.good{color:#a3e0c0}
+td.td-rank-sub.poor{color:var(--red);background:var(--red-bg)}
+
+.mini-bar-wrap{display:flex;align-items:center;gap:4px}
+.mini-bar{height:8px;border-radius:2px;background:var(--accent);opacity:.6;min-width:2px}
+
+.no-res{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+.table-wrap::-webkit-scrollbar{width:5px;height:5px}
+.table-wrap::-webkit-scrollbar-track{background:var(--surface)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <h1>Налоговая конкурентоспособность ОЭСР</h1>
+    <p>ITCI 2025 · Tax Foundation · 38 стран</p>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showScreen('article',this)">
+      <span class="tab-num">01</span> Суть исследования
+    </div>
+    <div class="nav-tab" onclick="showScreen('table',this)">
+      <span class="tab-num">02</span> Рейтинг стран
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="badge green">● 2025</span>
+    <span class="badge">38 стран ОЭСР</span>
+  </div>
+</nav>
+
+<!-- ══════════════════ SCREEN 1 — ARTICLE ══════════════════ -->
+<div class="screen active" id="screen-article">
+<div class="article-wrap">
+
+  <div class="article-hero">
+    <div class="article-hero-label">Tax Foundation · International Tax Competitiveness Index</div>
+    <h2>Международный индекс налоговой конкурентоспособности — 2025</h2>
+    <div class="article-hero-meta">
+      <span>Авторы: <b>Alex Mengden, Andrea Nieder</b></span>
+      <span>Дата: <b>октябрь 2025</b></span>
+      <span>Охват: <b>38 стран ОЭСР</b></span>
+      <span>Переменных: <b>40+</b></span>
+    </div>
+  </div>
+
+  <div class="section-title">Главные выводы</div>
+  <div class="key-points">
+    <div class="kp">
+      <div class="kp-icon" style="background:rgba(34,201,122,.1)">🏆</div>
+      <div class="kp-body">
+        <div class="kp-title">Эстония — лидер 12-й год подряд</div>
+        <div class="kp-text">Налог на прибыль 22% взимается только с распределённой прибыли (не с реинвестированной). Плоский НДФЛ 22%, налог на имущество — только на стоимость земли, полное освобождение иностранной прибыли от внутреннего налогообложения.</div>
+      </div>
+    </div>
+    <div class="kp">
+      <div class="kp-icon" style="background:rgba(242,92,92,.1)">⚠️</div>
+      <div class="kp-body">
+        <div class="kp-title">Франция — последнее место (38 из 38)</div>
+        <div class="kp-text">Самая высокая ставка корпоративного налога в ОЭСР — 36,13% (с учётом надбавок). Множество деструктивных налогов на имущество: налог на наследство, на активы банков, на финансовые транзакции, налог на богатство с недвижимости. НДС охватывает лишь ~50% конечного потребления.</div>
+      </div>
+    </div>
+    <div class="kp">
+      <div class="kp-icon" style="background:rgba(79,142,247,.1)">📊</div>
+      <div class="kp-body">
+        <div class="kp-title">Что измеряет индекс</div>
+        <div class="kp-text">Два критерия: <b>конкурентоспособность</b> (низкие предельные ставки — капитал мобилен, он уходит в юрисдикции с меньшим налогом) и <b>нейтральность</b> (минимум экономических искажений — система не должна отдавать предпочтение потреблению перед сбережением или создавать привилегии для отдельных секторов).</div>
+      </div>
+    </div>
+    <div class="kp">
+      <div class="kp-icon" style="background:rgba(242,166,60,.1)">🔄</div>
+      <div class="kp-body">
+        <div class="kp-title">Глобальный тренд последних лет</div>
+        <div class="kp-text">За несколько десятилетий предельные ставки корпоративного и подоходного налога в ОЭСР существенно снизились. Основные доходы теперь обеспечивают широкие базовые налоги — НДС и социальные взносы. Однако налоговая политика всё чаще становится инструментом торговых споров: тарифы, цифровые сборы, экстерриториальные налоги — всё это ухудшает деловой климат.</div>
+      </div>
+    </div>
+    <div class="kp">
+      <div class="kp-icon" style="background:rgba(167,139,250,.1)">🌍</div>
+      <div class="kp-body">
+        <div class="kp-title">Недавние изменения в странах ОЭСР</div>
+        <div class="kp-text">Австрия снизила ставку корпоративного налога. Франция, Словакия и Словения — повысили. Германия, Великобритания и США улучшили налоговую базу для бизнеса. Канада и Финляндия сворачивают временные льготы, которые Великобритания и США сделали постоянными.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Пять категорий оценки и их влияние на рост ВВП</div>
+  <div class="categories-grid">
+    <div class="cat-card">
+      <div class="cat-name">🏢 Корпоративные налоги</div>
+      <div class="cat-desc">Ставка, база, амортизация, налоговые стимулы, правила для иностранных дочерних компаний.</div>
+      <span class="cat-impact impact-high">Наибольший вред для роста</span>
+    </div>
+    <div class="cat-card">
+      <div class="cat-name">👤 Налоги на физлиц</div>
+      <div class="cat-desc">Прогрессивность шкалы, налогообложение дивидендов и прироста капитала, порог входа.</div>
+      <span class="cat-impact impact-mid">Средний вред для роста</span>
+    </div>
+    <div class="cat-card">
+      <div class="cat-name">🛒 Налоги на потребление</div>
+      <div class="cat-desc">НДС, широта базы, ставка, специальные сборы на отдельные товары и услуги.</div>
+      <span class="cat-impact impact-mid">Средний вред для роста</span>
+    </div>
+    <div class="cat-card">
+      <div class="cat-name">🏠 Налоги на имущество</div>
+      <div class="cat-desc">Налог на землю и объекты, налог на передачу, на наследство, на финансовые транзакции.</div>
+      <span class="cat-impact impact-low">Наименьший вред для роста</span>
+    </div>
+    <div class="cat-card">
+      <div class="cat-name">🌐 Трансграничные правила</div>
+      <div class="cat-desc">Territorial vs. worldwide tax, удерживаемые налоги на дивиденды, проценты и роялти.</div>
+      <span class="cat-impact impact-mid">Влияет на приток FDI</span>
+    </div>
+  </div>
+
+  <div class="section-title">Лучшие и худшие системы</div>
+  <div class="leaders-grid">
+    <div class="leader-card best">
+      <div class="leader-rank">#1 Лучшая система</div>
+      <div class="leader-country">🇪🇪 Эстония</div>
+      <div class="leader-score">100.0</div>
+      <div class="leader-text">Налог на прибыль только с распределённой прибыли, плоский НДФЛ 22%, налог лишь на стоимость земли, полное освобождение иностранных прибылей.</div>
+    </div>
+    <div class="leader-card">
+      <div class="leader-rank">#2</div>
+      <div class="leader-country">🇱🇻 Латвия</div>
+      <div class="leader-score">92.8</div>
+      <div class="leader-text">Скопировала эстонскую модель налогообложения прибыли. Эффективная система налогообложения труда.</div>
+    </div>
+    <div class="leader-card">
+      <div class="leader-rank">#3</div>
+      <div class="leader-country">🇳🇿 Новая Зеландия</div>
+      <div class="leader-score">87.8</div>
+      <div class="leader-text">Плоский низкий НДФЛ, освобождение прироста капитала, широкая база НДС, нет налогов на наследство и финансовые транзакции.</div>
+    </div>
+    <div class="leader-card">
+      <div class="leader-rank">#4</div>
+      <div class="leader-country">🇨🇭 Швейцария</div>
+      <div class="leader-score">86.0</div>
+      <div class="leader-text">Низкий корпоративный налог 19.7%, широкая низкая база НДС, частичное освобождение прироста капитала для физлиц.</div>
+    </div>
+    <div class="leader-card worst">
+      <div class="leader-rank">#38 Худшая система</div>
+      <div class="leader-country">🇫🇷 Франция</div>
+      <div class="leader-score">45.8</div>
+      <div class="leader-text">Высший корпоративный налог в ОЭСР — 36.13%. Множество искажающих налогов на имущество, узкая база НДС (~50% потребления), налог на богатство.</div>
+    </div>
+    <div class="leader-card worst">
+      <div class="leader-rank">#37 Предпоследнее</div>
+      <div class="leader-country">🇮🇹 Италия</div>
+      <div class="leader-score">50.3</div>
+      <div class="leader-text">Множество искажающих налогов на имущество, наследство, финансовые транзакции. Сложная и неэффективная система в целом.</div>
+    </div>
+  </div>
+
+  <div class="section-title">Ключевые выводы для политиков и инвесторов</div>
+  <div class="conclusions">
+    <div class="concl accent"><b>Капитал следует за налогами.</b> В условиях глобализации бизнес выбирает юрисдикции с более низкими ставками — высокий корпоративный налог не столько наполняет бюджет, сколько выталкивает инвестиции.</div>
+    <div class="concl green"><b>Лучшие системы просты и широки.</b> Плоская ставка + широкая база + минимум льгот = максимум нейтральности. Сложные системы с множеством исключений создают возможности для уклонения и неравные условия.</div>
+    <div class="concl amber"><b>НДС лучше налога на прибыль.</b> С точки зрения влияния на экономический рост, налоги на потребление наносят меньше вреда, чем корпоративные налоги. Широкая база НДС при умеренной ставке — более эффективное решение.</div>
+    <div class="concl red"><b>Налоги на имущество бывают разными.</b> Налог на стоимость земли (как в Эстонии) почти не искажает поведение. Налоги на передачу, наследство и финансовые транзакции — деструктивны: они облагают накопленный капитал и тормозят инвестиции.</div>
+    <div class="concl"><b>Тренд на использование налогов как геополитического оружия</b> (тарифы, цифровые сборы, глобальный минимальный налог ОЭСР Pillar Two) создаёт новые риски для международного налогового планирования и привлекательности юрисдикций.</div>
+  </div>
+
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--border)">
+    <div style="font-size:11px;color:var(--text3);line-height:1.7">
+      Источник: <a href="https://taxfoundation.org/research/all/global/2025-international-tax-competitiveness-index/" style="color:var(--accent);text-decoration:none">Tax Foundation — International Tax Competitiveness Index 2025</a>.
+      Авторы: Alex Mengden, Andrea Nieder. Данные охватывают 38 стран ОЭСР. Методология обновляется ежегодно — прямое сравнение с прошлыми годами некорректно.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════ SCREEN 2 — TABLE ══════════════════ -->
+<div class="screen" id="screen-table">
+  <div class="table-header">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="search" placeholder="Поиск страны…" autocomplete="off" oninput="applyFilters()">
+    </div>
+    <select id="filter-tier" onchange="applyFilters()">
+      <option value="">Все страны</option>
+      <option value="top">Топ (место 1–13)</option>
+      <option value="mid">Середина (14–26)</option>
+      <option value="bot">Аутсайдеры (27–38)</option>
+    </select>
+    <select id="sort-col" onchange="dropdownSort()">
+      <option value="">Сортировка: место</option>
+      <option value="score">По итоговому баллу</option>
+      <option value="corp">По корпоративным налогам</option>
+      <option value="ind">По налогам на физлиц</option>
+      <option value="cons">По налогам на потребление</option>
+      <option value="prop">По налогам на имущество</option>
+      <option value="cross">По трансграничным правилам</option>
+    </select>
+    <span class="count" id="count-lbl"><strong>38</strong> из 38</span>
+  </div>
+
+  <div class="legend-bar">
+    <span class="leg"><span class="leg-dot" style="background:var(--green)"></span>Место 1–5 в категории</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--red)"></span>Место 34–38 в категории</span>
+    <span style="color:var(--text3);font-size:11px;margin-left:8px">Меньший ранг = лучше. Балл 100 = максимум конкурентоспособности.</span>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+  <colgroup>
+    <col class="c-rank"><col class="c-country"><col class="c-score">
+    <col class="c-corp"><col class="c-ind"><col class="c-cons"><col class="c-prop"><col class="c-cross">
+    <col class="c-bar">
+  </colgroup>
+  <thead>
+    <tr class="sub-header">
+      <th></th><th></th><th class="r">Итог</th>
+      <th class="c">Корп.</th><th class="c">Физлица</th><th class="c">Потреб.</th><th class="c">Имущ.</th><th class="c">Трансгр.</th>
+      <th class="c">Балл (визуализация)</th>
+    </tr>
+    <tr class="col-headers">
+      <th class="r" onclick="colSort(0)">№ <span class="sa">↕</span></th>
+      <th onclick="colSort(1)">Страна <span class="sa">↕</span></th>
+      <th class="r" onclick="colSort(2)">Балл <span class="sa">↕</span></th>
+      <th class="c" onclick="colSort(3)">Налог на прибыль <span class="sa">↕</span></th>
+      <th class="c" onclick="colSort(4)">НДФЛ <span class="sa">↕</span></th>
+      <th class="c" onclick="colSort(5)">НДС/потребл. <span class="sa">↕</span></th>
+      <th class="c" onclick="colSort(6)">Имущество <span class="sa">↕</span></th>
+      <th class="c" onclick="colSort(7)">Трансграничные <span class="sa">↕</span></th>
+      <th class="c">Итоговый балл</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+  </table>
+  </div>
+</div>
+
+<script>
+// [country_ru, rank, score, corp, ind, cons, prop, cross]
+const DATA = [
+["Эстония",1,100,2,2,22,1,7],
+["Латвия",2,92.8,1,7,20,7,6],
+["Новая Зеландия",3,87.8,31,6,1,4,22],
+["Швейцария",4,86,10,8,2,36,1],
+["Литва",5,81.8,3,9,25,10,15],
+["Люксембург",6,81,20,22,8,16,5],
+["Австралия",7,79.7,29,15,9,2,33],
+["Израиль",8,78.9,11,32,11,5,10],
+["Венгрия",9,78.7,4,3,38,22,4],
+["Чехия",10,77.4,8,10,32,6,11],
+["Швеция",11,76.1,6,19,26,8,13],
+["Турция",12,75.9,21,5,17,24,8],
+["Канада",13,73.9,22,27,7,25,18],
+["Словакия",14,73.3,24,1,34,9,24],
+["США",15,72.5,9,17,4,30,35],
+["Нидерланды",16,71.4,23,30,14,21,3],
+["Коста-Рика",17,71.4,34,23,6,12,30],
+["Мексика",18,70.1,26,14,12,3,36],
+["Австрия",19,69.6,19,26,16,17,16],
+["Германия",20,68.9,30,33,13,14,9],
+["Норвегия",21,68.8,13,29,23,15,14],
+["Япония",22,67.8,35,34,5,23,25],
+["Греция",23,67,16,4,30,29,23],
+["Финляндия",24,66.8,7,28,28,19,19],
+["Словения",25,66.8,12,11,29,26,21],
+["Южная Корея",26,66.3,25,38,3,31,29],
+["Дания",27,64.3,17,36,19,13,34],
+["Чили",28,63.8,32,24,10,11,38],
+["Исландия",29,63.7,15,20,24,27,26],
+["Бельгия",30,63.2,18,13,27,32,27],
+["Ирландия",31,61.3,5,37,36,18,28],
+["Великобритания",32,59.1,28,25,33,37,2],
+["Португалия",33,58.2,36,21,21,20,32],
+["Испания",34,57.9,33,18,18,35,17],
+["Польша",35,54.7,14,35,35,28,31],
+["Колумбия",36,51.1,37,12,15,33,37],
+["Италия",37,50.3,27,16,37,38,20],
+["Франция",38,45.8,38,31,31,34,12],
+];
+
+let colSortState = null;
+
+function rankClass(r){
+  if(r<=5)return 'best';
+  if(r>=34)return 'poor';
+  return 'good';
+}
+function scoreClass(rank){
+  if(rank<=13)return 'top';
+  if(rank<=26)return 'mid';
+  return 'bot';
+}
+
+function makeBar(score){
+  const w = Math.round(score/100*140);
+  const color = score>=75?'var(--green)':score>=60?'var(--amber)':'var(--red)';
+  return `<div class="mini-bar-wrap"><div class="mini-bar" style="width:${w}px;background:${color}"></div><span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${score}</span></div>`;
+}
+
+function applyFilters(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const tier = document.getElementById('filter-tier').value;
+  let rows = DATA.filter(r=>{
+    if(q && !r[0].toLowerCase().includes(q)) return false;
+    if(tier==='top' && r[1]>13) return false;
+    if(tier==='mid' && (r[1]<14||r[1]>26)) return false;
+    if(tier==='bot' && r[1]<27) return false;
+    return true;
+  });
+  if(colSortState){
+    const {col,dir}=colSortState;
+    rows.sort((a,b)=>{
+      const av=a[col],bv=b[col];
+      return(typeof av==='number'?av-bv:String(av).localeCompare(String(bv),'ru'))*dir;
+    });
+  }
+  render(rows);
+}
+
+function dropdownSort(){
+  const v = document.getElementById('sort-col').value;
+  colSortState = null;
+  document.querySelectorAll('thead th.sorted').forEach(t=>t.classList.remove('sorted'));
+  if(v){
+    const map={score:2,corp:3,ind:4,cons:5,prop:6,cross:7};
+    colSortState={col:map[v],dir:1};
+  }
+  applyFilters();
+}
+
+function colSort(col){
+  document.getElementById('sort-col').value='';
+  if(colSortState&&colSortState.col===col){colSortState.dir*=-1}
+  else{colSortState={col,dir:1}}
+  document.querySelectorAll('thead tr.col-headers th').forEach((th,i)=>{
+    th.classList.toggle('sorted',i===col);
+    const sa=th.querySelector('.sa');
+    if(sa)sa.textContent=i===col?(colSortState.dir===1?'↑':'↓'):'↕';
+  });
+  applyFilters();
+}
+
+function render(rows){
+  const tbody=document.getElementById('tbody');
+  document.getElementById('count-lbl').innerHTML=`<strong>${rows.length}</strong> из ${DATA.length}`;
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="9" class="no-res">Нет результатов</td></tr>`;return;}
+  tbody.innerHTML=rows.map((r,i)=>`
+<tr class="${i%2===1?'even':''}">
+  <td class="td-rank">${r[1]}</td>
+  <td class="td-country">${r[0]}</td>
+  <td class="td-score ${scoreClass(r[1])}">${r[2]}</td>
+  <td class="td-rank-sub ${rankClass(r[3])}">${r[3]}</td>
+  <td class="td-rank-sub ${rankClass(r[4])}">${r[4]}</td>
+  <td class="td-rank-sub ${rankClass(r[5])}">${r[5]}</td>
+  <td class="td-rank-sub ${rankClass(r[6])}">${r[6]}</td>
+  <td class="td-rank-sub ${rankClass(r[7])}">${r[7]}</td>
+  <td>${makeBar(r[2])}</td>
+</tr>`).join('');
+}
+
+function showScreen(id, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='table') applyFilters();
+}
+
+render(DATA);
+</script>
+</body>
+</html>
