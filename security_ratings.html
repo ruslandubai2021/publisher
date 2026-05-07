@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Глобальные рейтинги безопасности</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f12;--surface:#141720;--surface2:#1c2030;
+  --border:#2a2f3d;--border2:#3a4055;
+  --text:#e8eaf0;--text2:#8b90a0;--text3:#555c70;
+  --accent:#4f8ef7;--head-bg:#0a0c10;--row-hover:#1a1f2e;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --green:#22c97a;--green-bg:rgba(34,201,122,.08);
+  --amber:#f2a63c;--amber-bg:rgba(242,166,60,.08);
+  --red:#f25c5c;--red-bg:rgba(242,92,92,.08);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+/* HEADER */
+.header{background:var(--head-bg);border-bottom:1px solid var(--border);padding:16px 20px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.badge-row{display:flex;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--text2)}
+h1{font-size:18px;font-weight:600;letter-spacing:-.01em}
+h1 span{color:var(--text2);font-weight:300}
+.header-meta{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:2px}
+
+/* TAB BUTTONS */
+.tabs{padding:12px 20px 0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap}
+.tab-btn{
+  font-family:var(--sans);font-size:12px;font-weight:400;
+  padding:8px 14px;border-radius:6px 6px 0 0;
+  border:1px solid var(--border);border-bottom:none;
+  background:var(--surface2);color:var(--text2);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  display:flex;align-items:center;gap:7px;
+}
+.tab-btn:hover{color:var(--text);background:var(--surface)}
+.tab-btn.active{background:var(--bg);color:var(--text);border-color:var(--border2);font-weight:500}
+.tab-btn .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* PANEL */
+.panel{display:none}
+.panel.active{display:block}
+
+/* DESCRIPTION BAR */
+.desc-bar{
+  padding:14px 20px;background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.desc-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.desc-text{font-size:12px;color:var(--text2);line-height:1.6;max-width:900px}
+.desc-meta{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap}
+.desc-meta-item{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.04em}
+.desc-meta-item strong{color:var(--text2)}
+
+/* CONTROLS */
+.controls{padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:160px;max-width:240px}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+input[type=search]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px 6px 30px;font-family:var(--sans);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+input[type=search]:focus{border-color:var(--border2)}
+input[type=search]::placeholder{color:var(--text3)}
+.count{font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto}
+.count strong{color:var(--text2)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 260px)}
+table{width:100%;border-collapse:collapse}
+thead{position:sticky;top:0;z-index:10;background:var(--head-bg)}
+thead th{padding:8px 12px;font-size:11px;font-weight:500;color:var(--text2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none;transition:color .12s}
+thead th:hover{color:var(--text)}
+thead th .sa{display:inline-block;margin-left:4px;opacity:0;font-size:10px}
+thead th:hover .sa,thead th.sorted .sa{opacity:1;color:var(--accent)}
+thead th.sorted{color:var(--accent)}
+thead th.r{text-align:right}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--row-hover)}
+td{padding:7px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.rank{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;width:44px}
+td.country{font-weight:500;font-size:13px}
+td.val{font-family:var(--mono);font-size:12px;font-weight:500;text-align:right}
+td.val.g{color:var(--green);background:var(--green-bg)}
+td.val.a{color:var(--amber);background:var(--amber-bg)}
+td.val.r{color:var(--red);background:var(--red-bg)}
+td.val.n{color:var(--text2)}
+td.extra{font-size:11px;color:var(--text3);text-align:right}
+.no-res{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+.table-wrap::-webkit-scrollbar{width:5px;height:5px}
+.table-wrap::-webkit-scrollbar-track{background:var(--surface)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge-row">
+      <span class="badge">7 рейтингов</span>
+      <span class="badge">Безопасность</span>
+      <span class="badge">Глобальный охват</span>
+    </div>
+    <h1>Глобальные рейтинги безопасности <span>/ Global Safety Index</span></h1>
+    <div class="header-meta">Источники: Numbeo · IEP · ООН · ВОЗ · ВЭФ · ICPR · nonews.co</div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" data-panel="crime" onclick="switchTab('crime',this)">
+    <span class="dot" style="background:#f25c5c"></span>Преступность
+  </button>
+  <button class="tab-btn" data-panel="terror" onclick="switchTab('terror',this)">
+    <span class="dot" style="background:#f2a63c"></span>Терроризм
+  </button>
+  <button class="tab-btn" data-panel="peace" onclick="switchTab('peace',this)">
+    <span class="dot" style="background:#22c97a"></span>Индекс мира
+  </button>
+  <button class="tab-btn" data-panel="homicide" onclick="switchTab('homicide',this)">
+    <span class="dot" style="background:#f25c5c"></span>Убийства
+  </button>
+  <button class="tab-btn" data-panel="suicide" onclick="switchTab('suicide',this)">
+    <span class="dot" style="background:#8b6cf7"></span>Самоубийства
+  </button>
+  <button class="tab-btn" data-panel="prison" onclick="switchTab('prison',this)">
+    <span class="dot" style="background:#f2a63c"></span>Заключённые
+  </button>
+  <button class="tab-btn" data-panel="police" onclick="switchTab('police',this)">
+    <span class="dot" style="background:#22c97a"></span>Надёжность полиции
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 1 — CRIME INDEX
+══════════════════════════════════════════ -->
+<div class="panel active" id="panel-crime">
+  <div class="desc-bar">
+    <div class="desc-title">Индекс преступности (Crime Index) — Numbeo, 2021</div>
+    <div class="desc-text">База данных Numbeo оценивает уровень преступности на основе отзывов жителей и туристов. Индекс ниже 20 — крайне низкая преступность, 20–40 — низкая, 40–60 — умеренная, 60–80 — высокая, 80–100 — максимальная опасность.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>Numbeo</strong></span>
+      <span class="desc-meta-item">Год: <strong>2021</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/crime-index</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('crime',this.value)">
+    </div>
+    <span class="count" id="cnt-crime"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-crime">
+      <thead><tr>
+        <th class="r" onclick="sortTable('crime',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('crime',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('crime',2)">Индекс преступности <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('crime',3)">Индекс безопасности <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-crime"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 2 — TERRORISM -->
+<div class="panel" id="panel-terror">
+  <div class="desc-bar">
+    <div class="desc-title">Глобальный индекс терроризма (Global Terrorism Index) — IEP, 2020</div>
+    <div class="desc-text">Разработан Институтом экономики и мира (IEP). Измеряет уровень террористической активности: 0 — полное отсутствие угрозы терроризма, 10 — максимальная угроза. Публикуется ежегодно на основе данных о терактах по всему миру.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>Institute for Economics and Peace</strong></span>
+      <span class="desc-meta-item">Год: <strong>2020</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/terrorism</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('terror',this.value)">
+    </div>
+    <span class="count" id="cnt-terror"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-terror">
+      <thead><tr>
+        <th class="r" onclick="sortTable('terror',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('terror',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('terror',2)">Индекс терроризма <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-terror"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 3 — PEACE -->
+<div class="panel" id="panel-peace">
+  <div class="desc-bar">
+    <div class="desc-title">Глобальный индекс миролюбия (Global Peace Index) — IEP / EIU, 2022</div>
+    <div class="desc-text">Комплексный показатель миролюбия стран мира. Учитывает уровень насилия внутри государства (вес 60%) и агрессивность внешней политики (40%). Чем ниже индекс — тем более мирной считается страна. Методология Economist Intelligence Unit.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>The Economist Intelligence Unit / IEP</strong></span>
+      <span class="desc-meta-item">Год: <strong>2022</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/global-peace-index</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('peace',this.value)">
+    </div>
+    <span class="count" id="cnt-peace"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-peace">
+      <thead><tr>
+        <th class="r" onclick="sortTable('peace',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('peace',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('peace',2)">Индекс мира <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-peace"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 4 — HOMICIDE -->
+<div class="panel" id="panel-homicide">
+  <div class="desc-bar">
+    <div class="desc-title">Уровень умышленных убийств — ООН / УНП ООН, 2018</div>
+    <div class="desc-text">Показатель числа преднамеренных убийств на 100 000 населения. Публикуется Управлением ООН по наркотикам и преступности (УНП ООН) и Всемирным банком. Является базовым индикатором физической безопасности населения.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>УНП ООН (UNODC)</strong></span>
+      <span class="desc-meta-item">Год: <strong>2018</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/killer</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('homicide',this.value)">
+    </div>
+    <span class="count" id="cnt-homicide"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-homicide">
+      <thead><tr>
+        <th class="r" onclick="sortTable('homicide',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('homicide',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('homicide',2)">Убийств / 100 тыс. <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-homicide"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 5 — SUICIDE -->
+<div class="panel" id="panel-suicide">
+  <div class="desc-bar">
+    <div class="desc-title">Уровень самоубийств — ВОЗ, 2019</div>
+    <div class="desc-text">Статистика ВОЗ о числе зафиксированных суицидов на 100 000 населения. Данные предоставляют национальные статистические агентства. Исследование показывает: уровень суицида не зависит напрямую от уровня жизни или состояния экономики.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>ВОЗ (WHO Suicide rate estimates)</strong></span>
+      <span class="desc-meta-item">Год: <strong>2019</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/suicide-rate</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('suicide',this.value)">
+    </div>
+    <span class="count" id="cnt-suicide"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-suicide">
+      <thead><tr>
+        <th class="r" onclick="sortTable('suicide',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('suicide',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('suicide',2)">Суицидов / 100 тыс. <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-suicide"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 6 — PRISON -->
+<div class="panel" id="panel-prison">
+  <div class="desc-bar">
+    <div class="desc-title">Число заключённых по странам — ICPR / World Prison Brief, 2022</div>
+    <div class="desc-text">Ежегодный отчёт Института исследований в области уголовной политики (ICPR). Показывает абсолютное число заключённых и число на 100 тыс. населения. Последнее позволяет объективно сравнивать страны разного размера.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>Institute for Criminal Policy Research (ICPR)</strong></span>
+      <span class="desc-meta-item">Год: <strong>2022</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/prison-population</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('prison',this.value)">
+    </div>
+    <span class="count" id="cnt-prison"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-prison">
+      <thead><tr>
+        <th class="r" onclick="sortTable('prison',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('prison',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('prison',2)">Всего заключённых <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('prison',3)">На 100 тыс. чел. <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-prison"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 7 — POLICE -->
+<div class="panel" id="panel-police">
+  <div class="desc-bar">
+    <div class="desc-title">Надёжность полиции (Reliability of Police Services) — ВЭФ / Global Competitiveness Report</div>
+    <div class="desc-text">Всемирный экономический форум ежегодно оценивает эффективность, надёжность и открытость полицейских служб разных стран. Оценка формируется на основе опроса граждан: «В какой степени вы можете полагаться на полицию для обеспечения правопорядка?» Шкала от 1 до 7.</div>
+    <div class="desc-meta">
+      <span class="desc-meta-item">Источник: <strong>Всемирный экономический форум (ВЭФ)</strong></span>
+      <span class="desc-meta-item">Шкала: <strong>1–7 (выше = лучше)</strong></span>
+      <span class="desc-meta-item">Ссылка: <strong>nonews.co/…/reliability-police</strong></span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Поиск страны…" oninput="filterTable('police',this.value)">
+    </div>
+    <span class="count" id="cnt-police"><strong>—</strong></span>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-police">
+      <thead><tr>
+        <th class="r" onclick="sortTable('police',0)">№ <span class="sa">↕</span></th>
+        <th onclick="sortTable('police',1)">Страна <span class="sa">↕</span></th>
+        <th class="r" onclick="sortTable('police',2)">Оценка надёжности (1–7) <span class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tbody-police"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const DATA = {
+crime:[
+  [1,"Венесуэла",83.76,16.24],[2,"Папуа - Новая Гвинея",80.79,19.21],[3,"ЮАР",76.86,23.14],
+  [4,"Афганистан",76.31,23.69],[5,"Гондурас",74.54,25.46],[6,"Тринидад и Тобаго",71.63,28.37],
+  [7,"Гайана",68.74,31.26],[8,"Сальвадор",67.79,32.21],[9,"Бразилия",67.49,32.51],
+  [10,"Ямайка",67.42,32.58],[11,"Сирия",67.18,32.82],[12,"Перу",66.72,33.28],
+  [13,"Ангола",66.48,33.52],[14,"Камерун",65.24,34.76],[15,"Намибия",65.21,34.79],
+  [16,"Нигерия",64.06,35.94],[17,"Бангладеш",63.9,36.1],[18,"Аргентина",63.82,36.18],
+  [19,"Пуэрто-Рико",62.84,37.16],[20,"Багамы",62.06,37.94],[21,"Ливия",61.78,38.22],
+  [22,"Доминикана",61.02,38.98],[23,"Кения",60.14,39.86],[24,"Беларусь",59.58,40.42],
+  [25,"Зимбабве",59.3,40.7],[26,"Гватемала",58.67,41.33],[27,"Боливия",57.77,42.23],
+  [28,"Фиджи",57.62,42.38],[29,"Малайзия",57.29,42.71],[30,"Киргизия",56.87,43.13],
+  [31,"Колумбия",56.87,43.13],[32,"Уганда",56.12,43.88],[33,"Сомали",56.04,43.96],
+  [34,"Монголия",56.01,43.99],[35,"Танзания",56.0,44.0],[36,"Мальдивы",55.34,44.66],
+  [37,"Эквадор",55.23,44.77],[38,"Коста-Рика",54.22,45.78],[39,"Мексика",54.19,45.81],
+  [40,"Казахстан",53.77,46.23],[41,"Чили",53.42,46.58],[42,"Ботсвана",52.98,47.02],
+  [43,"Алжир",52.03,47.97],[44,"Франция",51.99,48.01],[45,"Уругвай",51.73,48.27],
+  [46,"Камбоджа",51.13,48.87],[47,"Белиз",50.39,49.61],[48,"Иран",49.38,50.62],
+  [49,"Парагвай",49.37,50.63],[50,"Эфиопия",49.3,50.7],[51,"Маврикий",48.88,51.12],
+  [52,"Марокко",48.66,51.34],[53,"Ирак",48.42,51.58],[54,"Швеция",48.0,52.0],
+  [55,"Никарагуа",47.89,52.11],[56,"США",47.81,52.19],[57,"Украина",47.42,52.58],
+  [58,"Гана",46.98,53.02],[59,"Пакистан",46.71,53.29],[60,"Хорватия",46.45,53.55],
+  [61,"Индия",45.63,54.37],[62,"Бельгия",45.62,54.38],[63,"Ливан",45.51,54.49],
+  [64,"Россия",45.42,54.58],[65,"Молдова",45.06,54.94],[66,"Румыния",44.29,55.71],
+  [67,"Буркина-Фасо",43.75,56.25],[68,"Нидерланды",43.72,56.28],[69,"Венгрия",43.38,56.62],
+  [70,"Латвия",43.06,56.94],[71,"Эстония",42.6,57.4],[72,"Польша",42.32,57.68],
+  [73,"Литва",41.97,58.03],[74,"Израиль",41.37,58.63],[75,"Болгария",40.98,59.02],
+  [76,"Лаос",40.68,59.32],[77,"Турция",40.63,59.37],[78,"Армения",39.82,60.18],
+  [79,"Греция",38.84,61.16],[80,"Словакия",38.47,61.53],[81,"Мьянма",38.05,61.95],
+  [82,"Южная Корея",37.55,62.45],[83,"Норвегия",37.27,62.73],[84,"Испания",37.17,62.83],
+  [85,"Ирландия",36.82,63.18],[86,"Чехия",36.58,63.42],[87,"Дания",36.35,63.65],
+  [88,"Беларусь",35.0,65.0],[89,"Австрия",34.92,65.08],[90,"Португалия",34.55,65.45],
+  [91,"Германия",34.51,65.49],[92,"Китай",34.19,65.81],[93,"Япония",25.12,74.88],
+  [94,"Сингапур",22.85,77.15],[95,"Исландия",19.42,80.58],[96,"ОАЭ",17.06,82.94],
+  [97,"Катар",13.54,86.46],[98,"Тайвань",13.37,86.63]
+],
+terror:[
+  [1,"Афганистан",9.592],[2,"Ирак",8.682],[3,"Нигерия",8.314],[4,"Сирия",7.778],
+  [5,"Сомали",7.645],[6,"Йемен",7.581],[7,"Пакистан",7.541],[8,"Индия",7.353],
+  [9,"ДР Конго",7.178],[10,"Филиппины",7.099],[11,"Мали",7.049],[12,"Буркина-Фасо",6.755],
+  [13,"Камерун",6.627],[14,"Египет",6.419],[15,"Мозамбик",6.400],[16,"Ливия",6.250],
+  [17,"ЦАР",6.241],[18,"Турция",6.110],[19,"Колумбия",6.100],[20,"Шри-Ланка",6.065],
+  [21,"Таиланд",5.783],[22,"Южный Судан",5.725],[23,"Кения",5.644],[24,"Нигер",5.617],
+  [25,"Мьянма",5.543],[26,"Судан",5.401],[27,"Непал",5.340],[28,"Эфиопия",5.307],
+  [29,"США",5.260],[30,"Великобритания",5.161],[31,"Палестина",5.077],[32,"Саудовская Аравия",5.000],
+  [33,"Бангладеш",4.909],[34,"Чад",4.829],[35,"Бурунди",4.702],[36,"Украина",4.692],
+  [37,"Индонезия",4.629],[38,"Франция",4.614],[39,"Россия",4.542],[40,"Израиль",4.522],
+  [41,"ЮАР",4.358],[42,"Новая Зеландия",4.337],[43,"Мексика",4.316],[44,"Греция",4.182],
+  [45,"Таджикистан",4.180],[46,"Иран",4.157],[47,"Чили",4.031],[48,"Германия",3.965],
+  [49,"Тунис",3.858],[50,"Руанда",3.754],[51,"Ливан",3.661],[52,"Венесуэла",3.658],
+  [53,"Китай",3.587],[54,"Ангола",3.429],[55,"Уганда",3.278],[56,"Канада",3.171],
+  [57,"Иордания",3.149],[58,"Танзания",3.149],[59,"Бельгия",3.043],[60,"Италия",3.043],
+  [61,"Швеция",2.892],[62,"Ирландия",2.845],[63,"Испания",2.810],[64,"Боливия",2.795],
+  [65,"Алжир",2.696],[66,"Нидерланды",2.689],[67,"Эквадор",2.689],[68,"Бразилия",2.443],
+  [69,"Зимбабве",2.443],[70,"Парагвай",2.414],[71,"Австрия",2.091],[72,"Польша",1.999],
+  [73,"Португалия",1.959],[74,"Норвегия",1.941],[75,"Австралия",1.882],[76,"Дания",1.714],
+  [77,"Швейцария",1.558],[78,"Япония",1.486],[79,"Венгрия",1.378],[80,"Сингапур",0.0],
+  [81,"Исландия",0.0],[82,"ОАЭ",0.0],[83,"Катар",0.0]
+],
+peace:[
+  [1,"Исландия",1.107],[2,"Новая Зеландия",1.269],[3,"Ирландия",1.288],[4,"Дания",1.296],
+  [5,"Австрия",1.3],[6,"Португалия",1.301],[7,"Словения",1.316],[8,"Чехия",1.318],
+  [9,"Сингапур",1.326],[10,"Япония",1.336],[11,"Швейцария",1.357],[12,"Канада",1.389],
+  [13,"Венгрия",1.411],[14,"Финляндия",1.439],[15,"Хорватия",1.44],[16,"Германия",1.462],
+  [17,"Норвегия",1.465],[18,"Малайзия",1.471],[19,"Бутан",1.481],[20,"Словакия",1.499],
+  [21,"Нидерланды",1.522],[22,"Бельгия",1.526],[23,"Катар",1.533],[24,"Болгария",1.541],
+  [25,"Польша",1.552],[26,"Швеция",1.564],[27,"Австралия",1.565],[28,"Маврикий",1.57],
+  [29,"Испания",1.603],[30,"Тайвань",1.618],[31,"Румыния",1.64],[32,"Италия",1.643],
+  [33,"Эстония",1.662],[34,"Великобритания",1.667],[35,"Латвия",1.673],[36,"Северная Македония",1.704],
+  [37,"Литва",1.724],[38,"Коста-Рика",1.732],[39,"Кувейт",1.739],[40,"Гана",1.759],
+  [41,"Албания",1.761],[42,"Монголия",1.775],[43,"Южная Корея",1.779],[44,"Вьетнам",1.786],
+  [45,"Уругвай",1.795],[46,"Индонезия",1.8],[47,"ОАЭ",1.865],[48,"Франция",1.895],
+  [49,"Марокко",1.969],[50,"Аргентина",1.911],[51,"Китай",2.044],[52,"Индия",2.553],
+  [53,"США",2.44],[54,"Бразилия",2.339],[55,"Мексика",2.381],[56,"Россия",3.266],
+  [57,"Израиль",2.651],[58,"Украина",3.043],[59,"Иран",2.793],[60,"Пакистан",3.054],
+  [61,"Судан",3.174],[62,"Ирак",3.296],[63,"Ливия",3.319],[64,"Сомали",3.302],
+  [65,"Йемен",3.412],[66,"Сирия",3.588],[67,"Афганистан",3.554]
+],
+homicide:[
+  [1,"Сальвадор",52],[2,"Виргинские о-ва (США)",49],[3,"Ямайка",47],[4,"Венесуэла",36.69],
+  [5,"Белиз",24.8],[6,"Багамы",30.9],[7,"Гондурас",38.93],[8,"ЮАР",35.9],
+  [9,"Тринидад и Тобаго",37.4],[10,"Мексика",26.1],[11,"Бразилия",27.4],
+  [12,"Колумбия",25.34],[13,"Доминикана",23.7],[14,"Гватемала",22.5],
+  [15,"Пуэрто-Рико",16.81],[16,"Намибия",17],[17,"Боливия",5.7],
+  [18,"Гайана",18.4],[19,"Перу",7.8],[20,"Панама",11.4],
+  [21,"Эквадор",6],[22,"Уругвай",11.8],[23,"Аргентина",5.3],
+  [24,"Никарагуа",7],[25,"Папуа - Новая Гвинея",10],[26,"Нигерия",34.52],
+  [27,"Танзания",5],[28,"Мозамбик",3.3],[29,"Кения",4.7],
+  [30,"США",5],[31,"Канада",1.8],[32,"Австралия",0.9],
+  [33,"Германия",0.9],[34,"Франция",1.2],[35,"Великобритания",1.2],
+  [36,"Италия",0.5],[37,"Испания",0.6],[38,"Япония",0.2],
+  [39,"Сингапур",0.2],[40,"Южная Корея",0.6],[41,"Китай",0.5],
+  [42,"ОАЭ",0.5],[43,"Россия",8.2],[44,"Украина",6.3],
+  [45,"Беларусь",3.6],[46,"Казахстан",4.4],[47,"Индия",3],[48,"Иран",3.5],
+  [49,"Турция",4.3],[50,"Индонезия",0.4],[51,"Пакистан",6.7]
+],
+suicide:[
+  [1,"Гренландия",82.3],[2,"Гайана",30.2],[3,"Лесото",28.9],[4,"Россия",26.5],
+  [5,"Литва",25.7],[6,"Суринам",23.2],[7,"Кот-д'Ивуар",23.0],[8,"Казахстан",22.8],
+  [9,"Экваториальная Гвинея",22.0],[10,"Беларусь",21.4],[11,"Южная Корея",20.2],
+  [12,"Уганда",20.0],[13,"Камерун",19.5],[14,"Зимбабве",19.1],[15,"Украина",18.5],
+  [16,"Нигерия",17.3],[17,"Латвия",17.2],[18,"Свазиленд",16.7],[19,"Того",16.6],
+  [20,"Индия",16.5],[21,"Польша",14.9],[22,"Венгрия",14.7],[23,"Эстония",14.4],
+  [24,"Румыния",13.7],[25,"Финляндия",13.5],[26,"Словакия",12.9],[27,"США",14.5],
+  [28,"Австрия",13.0],[29,"Швейцария",12.5],[30,"Франция",13.8],[31,"Германия",12.3],
+  [32,"Канада",12.0],[33,"Австралия",12.5],[34,"Новая Зеландия",12.7],
+  [35,"Ирландия",10.5],[36,"Норвегия",11.0],[37,"Швеция",12.1],[38,"Великобритания",7.9],
+  [39,"Италия",6.7],[40,"Испания",8.5],[41,"Португалия",9.5],[42,"Греция",5.6],
+  [43,"Израиль",6.2],[44,"Турция",3.9],[45,"Иран",6.4],[46,"Китай",8.1],
+  [47,"Япония",16.5],[48,"Сингапур",7.9],[49,"Бразилия",7.4],[50,"Аргентина",8.2],
+  [51,"Мексика",5.1],[52,"Чили",10.5],[53,"Колумбия",6.6]
+],
+prison:[
+  [1,"США",2068800,629],[2,"Китай",1690000,119],[3,"Бразилия",811707,381],
+  [4,"Индия",488511,35],[5,"Россия",468237,324],[6,"Турция",314502,374],
+  [7,"Таиланд",285572,411],[8,"Индонезия",274849,99],[9,"Мексика",225843,172],
+  [10,"Иран",189000,228],[11,"Филиппины",165583,151],[12,"ЮАР",140948,235],
+  [13,"Вьетнам",125697,130],[14,"Египет",119000,117],[15,"Эфиопия",110000,99],
+  [16,"Аргентина",106559,235],[17,"Колумбия",97468,192],[18,"Алжир",94749,217],
+  [19,"Мьянма",92000,171],[20,"Перу",87558,258],[21,"Пакистан",85000,38],
+  [22,"Украина",62000,149],[23,"Польша",74000,196],[24,"Испания",57000,121],
+  [25,"Германия",56000,67],[26,"Великобритания",80806,119],[27,"Франция",73907,110],
+  [28,"Австралия",42153,164],[29,"Канада",40000,104],[30,"Казахстан",40258,218],
+  [31,"Азербайджан",25272,252],[32,"Беларусь",30572,326],[33,"Сальвадор",38000,584],
+  [34,"Куба",57337,510],[35,"Венесуэла",57000,197],[36,"Руанда",64157,502],
+  [37,"Сингапур",11426,200],[38,"ОАЭ",9000,93],[39,"Япония",45079,36],
+  [40,"Южная Корея",55000,107],[41,"Норвегия",3934,74],[42,"Исландия",131,38],
+  [43,"Дания",3859,66],[44,"Финляндия",2900,53],[45,"Швеция",7500,73],
+  [46,"Нидерланды",9000,52],[47,"Австрия",9300,104],[48,"Швейцария",6918,80],
+  [49,"Португалия",12200,119],[50,"Ирландия",4500,91]
+],
+police:[
+  [1,"Финляндия",6.6],[2,"ОАЭ",6.6],[3,"Сингапур",6.5],[4,"Катар",6.4],
+  [5,"Норвегия",6.4],[6,"Исландия",6.3],[7,"Дания",6.3],[8,"Швейцария",6.2],
+  [9,"Австрия",6.2],[10,"Люксембург",6.2],[11,"Новая Зеландия",6.1],[12,"Швеция",6.1],
+  [13,"Германия",6.0],[14,"Австралия",6.0],[15,"Нидерланды",6.0],[16,"Гонконг",5.9],
+  [17,"Ирландия",5.9],[18,"Великобритания",5.9],[19,"Канада",5.8],[20,"Португалия",5.8],
+  [21,"Япония",5.8],[22,"Испания",5.7],[23,"Бельгия",5.6],[24,"Оман",5.6],
+  [25,"Бутан",5.5],[26,"США",5.5],[27,"Франция",5.3],[28,"Южная Корея",5.2],
+  [29,"Малайзия",5.1],[30,"Польша",5.0],[31,"Италия",4.9],[32,"Катар",4.8],
+  [33,"Израиль",4.7],[34,"Румыния",4.6],[35,"Чили",4.5],[36,"Казахстан",4.4],
+  [37,"Аргентина",3.8],[38,"Бразилия",3.7],[39,"Индия",3.6],[40,"Мексика",3.4],
+  [41,"Турция",3.4],[42,"Перу",3.3],[43,"Колумбия",3.2],[44,"Нигерия",3.1],
+  [45,"Украина",3.0],[46,"Россия",2.9],[47,"Венесуэла",2.3],[48,"Гаити",2.0]
+]
+};
+
+const sortState = {};
+const filterState = {};
+
+function colorCrime(v){if(v<40)return 'g';if(v<60)return 'a';return 'r'}
+function colorTerror(v){if(v<3)return 'g';if(v<6)return 'a';return 'r'}
+function colorPeace(v){if(v<1.5)return 'g';if(v<2.5)return 'a';return 'r'}
+function colorHomicide(v){if(v<5)return 'g';if(v<15)return 'a';return 'r'}
+function colorSuicide(v){if(v<10)return 'g';if(v<20)return 'a';return 'r'}
+function colorPrison(v){if(v<100)return 'g';if(v<300)return 'a';return 'r'}
+function colorPolice(v){if(v>=5.5)return 'g';if(v>=4)return 'a';return 'r'}
+
+function fmtNum(n,dec=2){return typeof n==='number'?n.toLocaleString('ru-RU',{minimumFractionDigits:dec,maximumFractionDigits:dec}):n}
+function fmtInt(n){return typeof n==='number'?n.toLocaleString('ru-RU'):n}
+
+function renderTable(key){
+  const raw = DATA[key];
+  const q = (filterState[key]||'').toLowerCase();
+  let rows = q ? raw.filter(r=>r[1].toLowerCase().includes(q)) : [...raw];
+  const ss = sortState[key];
+  if(ss){
+    rows.sort((a,b)=>{
+      const av=a[ss.col],bv=b[ss.col];
+      return typeof av==='number'?(av-bv)*ss.dir:String(av).localeCompare(String(bv),'ru')*ss.dir;
+    });
+  }
+  const tbody = document.getElementById('tbody-'+key);
+  const cnt = document.getElementById('cnt-'+key);
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="6" class="no-res">Нет результатов</td></tr>`;
+    cnt.innerHTML=`<strong>0</strong>`;return;
+  }
+  cnt.innerHTML=`<strong>${rows.length}</strong> из ${raw.length}`;
+  let html='';
+  rows.forEach((r,i)=>{
+    const even=i%2===1?'even':'';
+    if(key==='crime'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorCrime(r[2])}">${fmtNum(r[2])}</td><td class="val ${colorCrime(100-r[3])}">${fmtNum(r[3])}</td></tr>`;
+    } else if(key==='terror'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorTerror(r[2])}">${fmtNum(r[2],3)}</td></tr>`;
+    } else if(key==='peace'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorPeace(r[2])}">${fmtNum(r[2],3)}</td></tr>`;
+    } else if(key==='homicide'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorHomicide(r[2])}">${fmtNum(r[2],1)}</td></tr>`;
+    } else if(key==='suicide'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorSuicide(r[2])}">${fmtNum(r[2],1)}</td></tr>`;
+    } else if(key==='prison'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val n">${fmtInt(r[2])}</td><td class="val ${colorPrison(r[3])}">${fmtInt(r[3])}</td></tr>`;
+    } else if(key==='police'){
+      html+=`<tr class="${even}"><td class="rank val n">${r[0]}</td><td class="country">${r[1]}</td><td class="val ${colorPolice(r[2])}">${fmtNum(r[2],1)}</td></tr>`;
+    }
+  });
+  tbody.innerHTML=html;
+}
+
+function sortTable(key,col){
+  const ss=sortState[key];
+  if(ss&&ss.col===col){sortState[key]={col,dir:ss.dir*-1}}else{sortState[key]={col,dir:1}}
+  document.querySelectorAll(`#tbl-${key} thead th`).forEach((th,i)=>{
+    th.classList.toggle('sorted',i===col);
+    const sa=th.querySelector('.sa');
+    if(sa)sa.textContent=i===col?(sortState[key].dir===1?'↑':'↓'):'↕';
+  });
+  renderTable(key);
+}
+
+function filterTable(key,q){
+  filterState[key]=q;
+  renderTable(key);
+}
+
+function switchTab(key,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+key).classList.add('active');
+  renderTable(key);
+}
+
+Object.keys(DATA).forEach(k=>renderTable(k));
+</script>
+</body>
+</html>
