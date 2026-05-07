@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Издержки при сделках с недвижимостью — Global Property Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f12;--surface:#141720;--surface2:#1c2030;
+  --border:#2a2f3d;--border2:#3a4055;
+  --text:#e8eaf0;--text2:#8b90a0;--text3:#555c70;
+  --accent:#4f8ef7;--head-bg:#0a0c10;--row-hover:#1a1f2e;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --buy:#4f8ef7;--buy-bg:rgba(79,142,247,.08);
+  --sell:#22c97a;--sell-bg:rgba(34,201,122,.08);
+  --round-lo:#f2a63c;--round-bg:rgba(242,166,60,.08);
+  --green:#22c97a;--green-bg:rgba(34,201,122,.07);
+  --amber:#f2a63c;--amber-bg:rgba(242,166,60,.07);
+  --red:#f25c5c;--red-bg:rgba(242,92,92,.07);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+/* HEADER */
+.header{background:var(--head-bg);border-bottom:1px solid var(--border);padding:16px 20px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.badge-row{display:flex;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--text2)}
+.badge.live{border-color:#4f8ef744;color:var(--accent);background:rgba(79,142,247,.06)}
+h1{font-size:18px;font-weight:600;letter-spacing:-.01em}
+h1 span{color:var(--text2);font-weight:300}
+.header-sub{font-size:11px;color:var(--text3);margin-top:3px;font-style:italic}
+
+/* LEGEND + CONTROLS */
+.toolbar{padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-wrap{position:relative;min-width:180px;max-width:240px;flex:1}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+input[type=search]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px 6px 30px;font-family:var(--sans);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+input[type=search]:focus{border-color:var(--border2)}
+input[type=search]::placeholder{color:var(--text3)}
+select{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 26px 6px 10px;font-family:var(--sans);font-size:12px;color:var(--text);outline:none;appearance:none;cursor:pointer;transition:border-color .15s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555c70'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+select:focus{border-color:var(--border2)}
+.legend{display:flex;gap:14px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.leg-dot{width:10px;height:3px;border-radius:2px}
+.count{font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap}
+.count strong{color:var(--text2)}
+
+/* INFO BAR */
+.info-bar{padding:10px 20px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.6}
+.info-bar b{color:var(--text2);font-weight:500}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 200px)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+col.c-rank{width:44px}
+col.c-country{width:180px}
+col.c-buy{width:140px}
+col.c-sell{width:130px}
+col.c-round{width:150px}
+col.c-bar{width:200px}
+
+thead{position:sticky;top:0;z-index:10;background:var(--head-bg)}
+thead tr.group-header th{padding:6px 12px 4px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:400;border-bottom:none}
+thead tr.group-header .th-buy{color:var(--buy);opacity:.7}
+thead tr.group-header .th-sell{color:var(--sell);opacity:.7}
+thead tr.group-header .th-round{color:var(--round-lo);opacity:.7}
+thead tr.col-headers th{padding:7px 12px;font-size:11px;font-weight:500;color:var(--text2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none;transition:color .12s}
+thead tr.col-headers th:hover{color:var(--text)}
+thead tr.col-headers th .sa{display:inline-block;margin-left:3px;opacity:0;font-size:10px}
+thead tr.col-headers th:hover .sa,thead tr.col-headers th.sorted .sa{opacity:1;color:var(--accent)}
+thead tr.col-headers th.sorted{color:var(--accent)}
+thead tr.col-headers th.r{text-align:right}
+thead tr.col-headers th.c{text-align:center}
+
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--row-hover)}
+
+td{padding:7px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.rank{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right}
+td.country{font-weight:500;font-size:13px}
+td.buy-cell{font-family:var(--mono);font-size:11px;text-align:right;color:var(--buy)}
+td.sell-cell{font-family:var(--mono);font-size:11px;text-align:right;color:var(--sell)}
+td.round-cell{font-family:var(--mono);font-size:11px;text-align:right;font-weight:500}
+td.round-cell.lo{color:var(--green)}
+td.round-cell.mid{color:var(--amber)}
+td.round-cell.hi{color:var(--red)}
+td.bar-cell{padding:7px 12px 7px 8px}
+
+/* BAR CHART in cell */
+.bar-wrap{display:flex;align-items:center;gap:6px;height:16px}
+.bar-seg{height:10px;border-radius:2px;min-width:2px;transition:width .3s}
+.bar-buy{background:var(--buy);opacity:.7}
+.bar-sell{background:var(--sell);opacity:.7}
+.bar-label{font-family:var(--mono);font-size:9px;color:var(--text3);white-space:nowrap}
+
+.no-res{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+.table-wrap::-webkit-scrollbar{width:5px;height:5px}
+.table-wrap::-webkit-scrollbar-track{background:var(--surface)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge-row">
+      <span class="badge live">● Актуально</span>
+      <span class="badge">Недвижимость</span>
+      <span class="badge">87 стран</span>
+    </div>
+    <h1>Издержки при сделках с недвижимостью <span>/ Transaction Costs</span></h1>
+    <div class="header-sub">Ориентировочные диапазоны: налоги, комиссии, пошлины, нотариат. Источник: Global Property Guide</div>
+  </div>
+</div>
+
+<div class="info-bar">
+  <b>Buying Costs</b> — затраты покупателя (налоги на покупку, пошлины, регистрация, нотариус, агент).&nbsp;&nbsp;
+  <b>Selling Costs</b> — затраты продавца (налог на прирост капитала, агент, юрист).&nbsp;&nbsp;
+  <b>Roundtrip Costs</b> — суммарные издержки полного цикла сделки (купить + продать). Указаны как % от стоимости объекта.
+</div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="search" placeholder="Поиск страны…" autocomplete="off" oninput="applyFilters()">
+  </div>
+  <select id="sort-select" onchange="applyFilters()">
+    <option value="country">Сортировка: по алфавиту</option>
+    <option value="buy-lo">Покупка: дешевле</option>
+    <option value="buy-hi">Покупка: дороже</option>
+    <option value="sell-lo">Продажа: дешевле</option>
+    <option value="sell-hi">Продажа: дороже</option>
+    <option value="round-lo">Roundtrip: дешевле</option>
+    <option value="round-hi">Roundtrip: дороже</option>
+  </select>
+  <select id="filter-level" onchange="applyFilters()">
+    <option value="">Все уровни издержек</option>
+    <option value="lo">Низкие (&lt; 8% roundtrip)</option>
+    <option value="mid">Средние (8–14%)</option>
+    <option value="hi">Высокие (&gt; 14%)</option>
+  </select>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:var(--buy)"></span>Покупка</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--sell)"></span>Продажа</span>
+  </div>
+  <span class="count" id="count-label"><strong>87</strong> стран</span>
+</div>
+
+<div class="table-wrap">
+<table>
+<colgroup>
+  <col class="c-rank"><col class="c-country">
+  <col class="c-buy"><col class="c-sell"><col class="c-round">
+  <col class="c-bar">
+</colgroup>
+<thead>
+  <tr class="group-header">
+    <th></th><th></th>
+    <th class="th-buy r">▲ Покупатель</th>
+    <th class="th-sell r">▲ Продавец</th>
+    <th class="th-round r">▲ Полный цикл</th>
+    <th class="c">Визуализация</th>
+  </tr>
+  <tr class="col-headers">
+    <th class="r" onclick="colSort(0)">№ <span class="sa">↕</span></th>
+    <th onclick="colSort(1)">Страна <span class="sa">↕</span></th>
+    <th class="r" onclick="colSort(2)">Buying Costs <span class="sa">↕</span></th>
+    <th class="r" onclick="colSort(3)">Selling Costs <span class="sa">↕</span></th>
+    <th class="r" onclick="colSort(4)">Roundtrip Costs <span class="sa">↕</span></th>
+    <th class="c">Buy vs Sell</th>
+  </tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+// [country, buyLo, buyHi, sellLo, sellHi, roundLo, roundHi]
+const RAW = [
+["Andorra",5.10,6.30,5.00,5.00,10.10,11.30],
+["Argentina",6.00,8.60,3.00,3.00,9.00,11.60],
+["Aruba",5.00,12.00,2.00,3.00,7.00,15.00],
+["Australia",1.60,8.00,2.00,2.50,3.60,10.50],
+["Austria",4.00,8.50,1.50,2.00,5.50,10.50],
+["Bahamas",4.00,12.50,6.00,10.00,10.00,22.50],
+["Bangladesh",5.20,7.50,5.00,6.00,10.20,13.50],
+["Belgium",4.00,15.50,3.00,3.00,7.00,18.50],
+["Belize",9.10,15.10,2.00,5.00,11.10,20.10],
+["Bosnia and Herzegovina",5.20,5.70,2.00,3.00,7.20,8.70],
+["Brazil",3.90,7.00,4.00,6.00,7.90,13.00],
+["Bulgaria",3.20,8.50,2.50,3.00,5.70,11.50],
+["Cambodia",4.00,5.00,3.00,5.00,7.00,10.00],
+["Canada",1.60,9.50,3.00,7.00,4.60,16.50],
+["Cayman Islands",8.50,9.50,4.00,10.00,12.50,19.50],
+["Chile",2.30,3.40,1.00,2.00,3.30,5.40],
+["China",8.10,11.10,1.00,1.00,9.10,12.10],
+["Colombia",2.00,4.50,3.00,4.00,5.00,8.50],
+["Costa Rica",4.25,4.25,2.50,5.00,6.25,9.25],
+["Croatia",3.50,7.50,1.00,3.00,4.50,10.50],
+["Cyprus",3.00,8.00,4.00,7.00,7.00,15.00],
+["Czech Republic",1.10,1.10,2.50,5.00,3.60,6.10],
+["Denmark",2.43,2.93,1.00,3.00,3.43,5.93],
+["Dominican Republic",4.25,5.00,2.00,3.00,6.25,8.00],
+["Egypt",7.00,11.00,2.00,3.00,9.00,14.00],
+["Estonia",0.52,1.20,2.00,3.00,2.52,4.20],
+["Finland",2.55,4.10,3.00,5.00,5.55,9.10],
+["France",1.82,7.00,2.00,5.00,3.82,12.00],
+["Georgia",0.70,1.20,3.00,5.00,3.60,6.10],
+["Germany",7.00,12.00,1.50,3.00,8.50,15.00],
+["Greece",6.37,8.77,1.00,2.00,7.37,10.77],
+["Hong Kong",9.50,13.40,0.50,1.00,10.00,14.40],
+["Hungary",2.51,5.55,3.00,5.00,5.51,10.55],
+["Iceland",0.90,2.70,1.50,2.50,2.40,5.20],
+["India",5.60,8.60,1.00,2.00,6.60,10.60],
+["Indonesia",4.50,9.00,3.00,5.00,9.50,14.00],
+["Ireland",2.10,7.70,1.00,2.50,3.10,10.20],
+["Israel",1.60,13.10,1.00,2.00,2.60,15.10],
+["Italy",7.00,15.00,3.00,3.00,10.00,18.00],
+["Jamaica",4.10,5.10,6.00,6.00,10.10,11.10],
+["Japan",8.50,10.00,3.00,3.00,11.50,13.00],
+["Kazakhstan",0.20,2.00,2.00,5.00,2.20,7.00],
+["Latvia",2.60,3.10,2.00,5.00,4.60,8.10],
+["Lithuania",1.85,1.85,1.00,3.00,2.85,4.85],
+["Luxembourg",9.50,12.50,3.00,3.00,12.00,15.50],
+["Macau",3.85,5.95,1.00,1.00,4.85,5.95],
+["Malaysia",1.60,5.10,2.00,2.75,3.60,7.85],
+["Malta",6.00,8.50,5.00,5.00,11.00,13.50],
+["Mauritius",8.60,11.10,2.00,2.00,10.60,13.10],
+["Mexico",3.50,8.00,3.00,6.00,6.50,14.00],
+["Moldova",0.60,2.80,2.00,4.00,2.60,6.80],
+["Monaco",6.00,17.50,5.00,5.00,11.50,22.50],
+["Mongolia",0.20,0.60,5.00,5.00,5.20,5.60],
+["Montenegro",4.10,7.10,3.00,5.00,7.10,12.10],
+["Morocco",7.50,15.50,0.00,0.00,7.50,15.50],
+["Netherlands",2.10,14.40,1.00,2.00,3.10,16.40],
+["New Zealand",1.60,1.90,3.50,4.00,5.10,5.90],
+["North Macedonia",2.20,5.50,2.00,2.00,4.20,7.50],
+["Norway",3.60,3.60,1.00,3.00,4.60,6.60],
+["Pakistan",9.75,12.00,1.00,2.00,10.75,14.00],
+["Panama",4.10,4.10,3.00,5.00,7.10,9.10],
+["Peru",4.50,5.50,3.00,5.00,7.50,10.50],
+["Philippines",2.50,2.75,10.50,12.50,13.00,15.25],
+["Poland",3.25,3.40,2.00,3.00,5.25,6.40],
+["Portugal",2.15,11.20,3.00,6.00,5.15,17.20],
+["Puerto Rico",1.50,3.00,4.00,6.00,5.50,9.00],
+["Qatar",1.25,1.25,1.00,5.00,2.25,6.25],
+["Romania",1.44,3.20,4.00,6.00,5.44,9.20],
+["Russia",2.50,2.50,2.00,5.00,4.50,7.50],
+["Saudi Arabia",7.00,6.00,2.50,2.50,8.50,9.50],
+["Serbia",5.60,8.00,2.00,2.00,7.60,10.00],
+["Singapore",7.30,67.30,2.15,18.15,9.45,85.45],
+["Slovakia",1.01,1.10,2.00,4.00,3.01,5.10],
+["Slovenia",3.60,6.00,1.00,2.00,4.60,8.00],
+["South Africa",0.80,14.70,5.00,7.50,5.80,22.20],
+["South Korea",1.90,13.60,0.30,0.50,2.20,14.10],
+["Spain",7.50,14.00,3.00,6.00,10.50,20.00],
+["Sweden",2.60,5.85,3.00,5.00,5.60,10.85],
+["Switzerland",1.30,5.80,2.00,3.00,3.30,8.80],
+["Taiwan",9.20,10.10,3.00,3.00,12.20,13.10],
+["Thailand",3.00,4.20,3.00,5.00,6.00,9.20],
+["Tunisia",9.60,14.10,0.00,0.00,9.60,14.10],
+["Turkey",8.60,8.70,0.00,0.00,8.60,8.70],
+["Ukraine",3.10,4.10,3.00,5.00,6.10,9.10],
+["United Arab Emirates",3.00,5.00,2.00,3.00,5.00,8.00],
+["United Kingdom",0.60,13.50,2.00,3.50,2.60,17.00],
+["United States",0.65,4.10,3.00,6.00,3.65,10.10],
+["Uruguay",8.00,8.00,0.00,0.00,8.00,8.00],
+["Vietnam",2.55,3.10,1.00,3.00,3.55,6.10],
+];
+
+// Translate countries to Russian
+const RU = {
+"Andorra":"Андорра","Argentina":"Аргентина","Aruba":"Аруба","Australia":"Австралия",
+"Austria":"Австрия","Bahamas":"Багамы","Bangladesh":"Бангладеш","Belgium":"Бельгия",
+"Belize":"Белиз","Bosnia and Herzegovina":"Босния и Герцеговина","Brazil":"Бразилия",
+"Bulgaria":"Болгария","Cambodia":"Камбоджа","Canada":"Канада","Cayman Islands":"Острова Кайман",
+"Chile":"Чили","China":"Китай","Colombia":"Колумбия","Costa Rica":"Коста-Рика","Croatia":"Хорватия",
+"Cyprus":"Кипр","Czech Republic":"Чехия","Denmark":"Дания","Dominican Republic":"Доминикана",
+"Egypt":"Египет","Estonia":"Эстония","Finland":"Финляндия","France":"Франция",
+"Georgia":"Грузия","Germany":"Германия","Greece":"Греция","Hong Kong":"Гонконг",
+"Hungary":"Венгрия","Iceland":"Исландия","India":"Индия","Indonesia":"Индонезия",
+"Ireland":"Ирландия","Israel":"Израиль","Italy":"Италия","Jamaica":"Ямайка","Japan":"Япония",
+"Kazakhstan":"Казахстан","Latvia":"Латвия","Lithuania":"Литва","Luxembourg":"Люксембург",
+"Macau":"Макао","Malaysia":"Малайзия","Malta":"Мальта","Mauritius":"Маврикий",
+"Mexico":"Мексика","Moldova":"Молдова","Monaco":"Монако","Mongolia":"Монголия",
+"Montenegro":"Черногория","Morocco":"Марокко","Netherlands":"Нидерланды","New Zealand":"Новая Зеландия",
+"North Macedonia":"Северная Македония","Norway":"Норвегия","Pakistan":"Пакистан",
+"Panama":"Панама","Peru":"Перу","Philippines":"Филиппины","Poland":"Польша","Portugal":"Португалия",
+"Puerto Rico":"Пуэрто-Рико","Qatar":"Катар","Romania":"Румыния","Russia":"Россия",
+"Saudi Arabia":"Саудовская Аравия","Serbia":"Сербия","Singapore":"Сингапур",
+"Slovakia":"Словакия","Slovenia":"Словения","South Africa":"ЮАР","South Korea":"Южная Корея",
+"Spain":"Испания","Sweden":"Швеция","Switzerland":"Швейцария","Taiwan":"Тайвань",
+"Thailand":"Таиланд","Tunisia":"Тунис","Turkey":"Турция","Ukraine":"Украина",
+"United Arab Emirates":"ОАЭ","United Kingdom":"Великобритания","United States":"США",
+"Uruguay":"Уругвай","Vietnam":"Вьетнам"
+};
+
+function fmt(lo,hi,unit='%'){
+  if(lo===hi) return lo.toFixed(2)+unit;
+  return lo.toFixed(2)+unit+' – '+hi.toFixed(2)+unit;
+}
+
+function roundClass(lo,hi){
+  const mid=(lo+hi)/2;
+  if(mid<8)return 'lo';
+  if(mid<=14)return 'mid';
+  return 'hi';
+}
+
+// For bar: max roundtrip across all data (excluding Singapore outlier)
+const MAX_BAR = 25; // cap at 25% for visual clarity
+
+function makeBars(buyHi, sellHi){
+  const cap = v=>Math.min(v, MAX_BAR);
+  const bw = Math.round(cap(buyHi)/MAX_BAR*120);
+  const sw = Math.round(cap(sellHi)/MAX_BAR*120);
+  return `<div class="bar-wrap">
+    <div class="bar-seg bar-buy" style="width:${bw}px" title="Buying: up to ${buyHi}%"></div>
+    <div class="bar-seg bar-sell" style="width:${sw}px" title="Selling: up to ${sellHi}%"></div>
+  </div>`;
+}
+
+let colSortState = null;
+
+function applyFilters(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const sortVal = document.getElementById('sort-select').value;
+  const level = document.getElementById('filter-level').value;
+
+  let rows = RAW.filter(r=>{
+    const name = (RU[r[0]]||r[0]).toLowerCase();
+    const engName = r[0].toLowerCase();
+    if(q && !name.includes(q) && !engName.includes(q)) return false;
+    if(level){
+      const mid=(r[5]+r[6])/2;
+      if(level==='lo' && mid>=8) return false;
+      if(level==='mid' && (mid<8||mid>14)) return false;
+      if(level==='hi' && mid<=14) return false;
+    }
+    return true;
+  });
+
+  if(colSortState){
+    const {col,dir}=colSortState;
+    rows.sort((a,b)=>{
+      let av,bv;
+      if(col===0){av=RAW.indexOf(a);bv=RAW.indexOf(b)}
+      else if(col===1){av=(RU[a[0]]||a[0]);bv=(RU[b[0]]||b[0]);return av.localeCompare(bv,'ru')*dir}
+      else if(col===2){av=(a[1]+a[2])/2;bv=(b[1]+b[2])/2}
+      else if(col===3){av=(a[3]+a[4])/2;bv=(b[3]+b[4])/2}
+      else if(col===4){av=(a[5]+a[6])/2;bv=(b[5]+b[6])/2}
+      return(av-bv)*dir;
+    });
+  } else {
+    if(sortVal==='country') rows.sort((a,b)=>(RU[a[0]]||a[0]).localeCompare((RU[b[0]]||b[0]),'ru'));
+    else if(sortVal==='buy-lo') rows.sort((a,b)=>(a[1]+a[2])/2-(b[1]+b[2])/2);
+    else if(sortVal==='buy-hi') rows.sort((a,b)=>(b[1]+b[2])/2-(a[1]+a[2])/2);
+    else if(sortVal==='sell-lo') rows.sort((a,b)=>(a[3]+a[4])/2-(b[3]+b[4])/2);
+    else if(sortVal==='sell-hi') rows.sort((a,b)=>(b[3]+b[4])/2-(a[3]+a[4])/2);
+    else if(sortVal==='round-lo') rows.sort((a,b)=>(a[5]+a[6])/2-(b[5]+b[6])/2);
+    else if(sortVal==='round-hi') rows.sort((a,b)=>(b[5]+b[6])/2-(a[5]+a[6])/2);
+  }
+
+  const tbody = document.getElementById('tbody');
+  document.getElementById('count-label').innerHTML=`<strong>${rows.length}</strong> из ${RAW.length} стран`;
+
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="6" class="no-res">Нет результатов</td></tr>`;return;
+  }
+
+  tbody.innerHTML = rows.map((r,i)=>{
+    const name = RU[r[0]]||r[0];
+    const cls = roundClass(r[5],r[6]);
+    const even = i%2===1?'even':'';
+    return `<tr class="${even}">
+      <td class="rank">${i+1}</td>
+      <td class="country">${name}</td>
+      <td class="buy-cell">${fmt(r[1],r[2])}</td>
+      <td class="sell-cell">${fmt(r[3],r[4])}</td>
+      <td class="round-cell ${cls}">${fmt(r[5],r[6])}</td>
+      <td class="bar-cell">${makeBars(r[2],r[4])}</td>
+    </tr>`;
+  }).join('');
+}
+
+function colSort(col){
+  if(colSortState && colSortState.col===col){
+    colSortState.dir *= -1;
+  } else {
+    colSortState = {col, dir:1};
+  }
+  document.getElementById('sort-select').value='';
+  document.querySelectorAll('thead tr.col-headers th').forEach((th,i)=>{
+    th.classList.toggle('sorted', i===col);
+    const sa=th.querySelector('.sa');
+    if(sa) sa.textContent = i===col ? (colSortState.dir===1?'↑':'↓') : '↕';
+  });
+  applyFilters();
+}
+
+applyFilters();
+</script>
+</body>
+</html>
