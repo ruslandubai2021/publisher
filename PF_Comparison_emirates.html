@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Доходность аренды недвижимости — ОАЭ 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0e11;
+  --surface:#131720;
+  --surface2:#1a1f2e;
+  --surface3:#1e2535;
+  --border:#222a3a;
+  --border2:#2e3a50;
+  --text:#dde2ee;
+  --text2:#7a84a0;
+  --text3:#42506a;
+  --accent:#3d82f6;
+  --gold:#f5c842;
+  --gold-bg:rgba(245,200,66,.07);
+  --green:#1fc97a;
+  --green-bg:rgba(31,201,122,.07);
+  --green2:#16a562;
+  --red:#f05252;
+  --red-bg:rgba(240,82,82,.07);
+  --amber:#f59e0b;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.55;min-height:100vh}
+
+/* ───── HEADER ───── */
+.site-header{
+  background:linear-gradient(135deg,#0a1020 0%,#0d1828 60%,#0c1520 100%);
+  border-bottom:1px solid var(--border2);
+  padding:28px 24px 24px;
+  position:relative;overflow:hidden;
+}
+.site-header::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(61,130,246,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.header-left{}
+.header-eyebrow{
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;
+}
+.badge{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);color:var(--text2)}
+.badge.live{border-color:rgba(31,201,122,.4);color:var(--green);background:rgba(31,201,122,.07)}
+.badge.gold{border-color:rgba(245,200,66,.35);color:var(--gold);background:rgba(245,200,66,.06)}
+.site-header h1{font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.2;margin-bottom:8px}
+.site-header h1 em{font-style:normal;color:var(--gold)}
+.site-header p{font-size:13px;color:var(--text2);max-width:560px;line-height:1.6}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.avg-yield-card{
+  background:rgba(31,201,122,.08);border:1px solid rgba(31,201,122,.2);
+  border-radius:10px;padding:14px 20px;text-align:right;
+}
+.avg-yield-label{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--text2);text-transform:uppercase;margin-bottom:4px}
+.avg-yield-val{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--green);letter-spacing:-.02em}
+.avg-yield-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.header-meta{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.04em;text-align:right}
+
+/* ───── TABS NAV ───── */
+.tabs-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;gap:0;overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:12px 18px;font-size:12px;font-weight:400;color:var(--text2);
+  border-bottom:2px solid transparent;cursor:pointer;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+  transition:all .15s;
+}
+.tab-btn:hover{color:var(--text);background:rgba(255,255,255,.02)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--gold);font-weight:500}
+.tab-btn .city-yield{
+  font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:3px;
+  background:var(--surface2);border:1px solid var(--border);color:var(--text3);
+}
+.tab-btn.active .city-yield{background:var(--gold-bg);border-color:rgba(245,200,66,.3);color:var(--gold)}
+
+/* ───── CONTENT ───── */
+.content{max-width:1100px;margin:0 auto;padding:24px}
+
+/* info block */
+.info-section{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:20px 24px;margin-bottom:24px;
+}
+.info-section h2{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.info-section h2 .ico{font-size:16px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 15px}
+.info-card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.info-card-text{font-size:12px;color:var(--text2);line-height:1.6}
+.formula-box{
+  background:var(--surface2);border:1px solid var(--border2);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:12px 16px;
+  font-family:var(--mono);font-size:12px;color:var(--text2);line-height:1.8;
+}
+.formula-box b{color:var(--accent)}
+.formula-box .example{color:var(--green);font-size:11px;margin-top:4px}
+.warn-box{
+  background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.2);
+  border-radius:8px;padding:10px 14px;font-size:11px;color:var(--text2);
+  line-height:1.6;display:flex;gap:8px;align-items:flex-start;
+  margin-top:12px;
+}
+.warn-box .ico{color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* city intro */
+.city-intro{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;margin-bottom:20px;
+}
+.city-intro-left h3{font-size:18px;font-weight:600;letter-spacing:-.01em;margin-bottom:4px}
+.city-intro-left p{font-size:12px;color:var(--text2);max-width:540px;line-height:1.6}
+.city-avg-pill{
+  background:var(--green-bg);border:1px solid rgba(31,201,122,.25);
+  border-radius:8px;padding:12px 18px;text-align:center;flex-shrink:0;
+}
+.city-avg-pill .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);margin-bottom:3px}
+.city-avg-pill .val{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--green)}
+
+/* district selector */
+.district-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.dtab{
+  padding:5px 12px;font-size:11px;font-weight:400;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;cursor:pointer;color:var(--text2);transition:all .15s;
+}
+.dtab:hover{border-color:var(--border2);color:var(--text)}
+.dtab.active{background:var(--gold-bg);border-color:rgba(245,200,66,.3);color:var(--gold);font-weight:500}
+
+/* table */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--surface)}
+thead th{
+  padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);
+  white-space:nowrap;background:var(--surface);
+  cursor:pointer;user-select:none;transition:color .12s;
+}
+thead th:hover{color:var(--text2)}
+thead th.sorted{color:var(--gold)}
+thead th .sa{opacity:0;margin-left:3px;font-size:9px}
+thead th:hover .sa,thead th.sorted .sa{opacity:1;color:var(--gold)}
+thead th.r{text-align:right}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--surface2)}
+td{padding:10px 14px;vertical-align:middle;white-space:nowrap}
+td.td-type{font-weight:500;font-size:13px;color:var(--text)}
+td.td-dist{font-size:11px;color:var(--text3);padding-left:4px}
+td.td-price{font-family:var(--mono);font-size:12px;text-align:right;color:var(--text2)}
+td.td-rent{font-family:var(--mono);font-size:12px;text-align:right;color:var(--text2)}
+td.td-yield{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right}
+td.td-yield.hi{color:var(--green)}
+td.td-yield.mid{color:var(--amber)}
+td.td-yield.lo{color:var(--red)}
+td.td-bar{width:120px;padding:10px 14px 10px 8px}
+.yield-bar-bg{background:var(--surface2);border-radius:3px;height:6px;overflow:hidden}
+.yield-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+
+/* summary cards */
+.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:20px}
+.sum-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;
+}
+.sum-card-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.sum-card-val{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text)}
+.sum-card-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.sum-card.highlight{border-color:rgba(31,201,122,.25);background:var(--green-bg)}
+.sum-card.highlight .sum-card-val{color:var(--green)}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.source-line{font-size:11px;color:var(--text3);text-align:center;padding:20px 24px;border-top:1px solid var(--border);margin-top:4px}
+.source-line a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">
+        <span class="badge live">● Актуально</span>
+        <span class="badge gold">ОАЭ · Q4 2025</span>
+        <span class="badge">5 городов</span>
+      </div>
+      <h1>Доходность аренды<br>недвижимости в <em>ОАЭ</em></h1>
+      <p>Сравнение валовой доходности по районам и типам квартир в Дубае, Абу-Даби, Рас-эль-Хайме, Аджмане и Шардже. Данные в дирхамах (AED). Источник: Propertyfinder.ae</p>
+    </div>
+    <div class="header-right">
+      <div class="avg-yield-card">
+        <div class="avg-yield-label">Среднее по ОАЭ</div>
+        <div class="avg-yield-val">5.45%</div>
+        <div class="avg-yield-sub">Валовая доходность · Q4 2025</div>
+      </div>
+      <div class="header-meta">Обновлено: ноябрь 2025<br>Следующее: май 2026</div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS NAV -->
+<nav class="tabs-nav" id="tabs-nav">
+  <div class="tab-btn active" onclick="switchCity('dubai',this)">
+    🏙️ Дубай <span class="city-yield">6.66%</span>
+  </div>
+  <div class="tab-btn" onclick="switchCity('abudhabi',this)">
+    🕌 Абу-Даби <span class="city-yield">5.76%</span>
+  </div>
+  <div class="tab-btn" onclick="switchCity('rak',this)">
+    🏖️ Рас-эль-Хайма <span class="city-yield">3.29%</span>
+  </div>
+  <div class="tab-btn" onclick="switchCity('ajman',this)">
+    🌆 Аджман <span class="city-yield">5.67%</span>
+  </div>
+  <div class="tab-btn" onclick="switchCity('sharjah',this)">
+    🏛️ Шарджа <span class="city-yield">5.85%</span>
+  </div>
+  <div class="tab-btn" onclick="switchCity('info',this)">
+    📖 О методологии
+  </div>
+</nav>
+
+<div class="content">
+
+<!-- ── INFO SCREEN ── -->
+<div class="screen active" id="screen-info">
+  <div class="info-section">
+    <h2><span class="ico">📌</span> Что такое валовая доходность аренды</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Валовая доходность (Gross Yield)</div>
+        <div class="info-card-text">Показывает, какой процент от стоимости объекта вы зарабатываете за год на аренде. <b>До вычета</b> всех расходов: налогов, ремонта, комиссий агента, платы за управление.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Чистая доходность (Net Yield)</div>
+        <div class="info-card-text">Реальный доход после всех расходов. Как правило, ниже валовой на <b>1.5–2%</b>. Например: валовая 6.66% → чистая ≈ 4.7–5.2%.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Как читать таблицу</div>
+        <div class="info-card-text">Чем выше % — тем лучше возврат на вложенный капитал. Доходность выше 6% считается хорошей. Выше 8% — отличной для ОАЭ.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Периодичность исследования</div>
+        <div class="info-card-text">Данные обновляются <b>дважды в год</b>. Q4 2025: средняя доходность ОАЭ — 5.45%. В Q2 2025 показатель составлял 4.87%.</div>
+      </div>
+    </div>
+    <div class="formula-box">
+      <b>Формула расчёта валовой доходности:</b><br>
+      (Месячная аренда × 12) ÷ Цена покупки × 100 = Валовая доходность %<br>
+      <span class="example">Пример: (AED 5,000 × 12) ÷ AED 1,000,000 × 100 = 6.0% годовых</span>
+    </div>
+    <div class="warn-box">
+      <span class="ico">⚠️</span>
+      <span>Все цифры в таблицах — <b>валовые</b>, то есть до вычета расходов. Чистая доходность обычно на 1.5–2% ниже. Учитывайте: коммунальные платежи, плату управляющей компании (service charge), страхование, ремонт и возможные периоды простоя.</span>
+    </div>
+  </div>
+  <div class="info-section">
+    <h2><span class="ico">🔬</span> Методология исследования</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Источники данных</div>
+        <div class="info-card-text"> Propertyfinder.ae — крупнейший местный портал недвижимости. Используются медианные ставки аренды и медианные цены покупки.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Типы объектов</div>
+        <div class="info-card-text">Апартаменты 1BR, 2BR и 3BR — наиболее ликвидный сегмент рынка. Студии и 4BR+ показаны там, где данные доступны.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Цены в AED</div>
+        <div class="info-card-text">Все цифры переведены по курсу 1 USD = 3.67 AED (фиксированный курс дирхама к доллару США).</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Охват городов</div>
+        <div class="info-card-text">5 эмиратов: Дубай (8 районов), Абу-Даби (3 района + сводные данные), Рас-эль-Хайма, Аджман, Шарджа.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DUBAI ── -->
+<div class="screen active" id="screen-dubai">
+  <div class="city-intro">
+    <div class="city-intro-left">
+      <h3>🏙️ Дубай</h3>
+      <p>Самый динамичный рынок ОАЭ. Высокая доходность в доступных районах (JVC, Arjan, Al Furjan) — от 7% до 9%. Премиальные локации (Palm Jumeirah) дают ниже 4% на крупные объекты из-за высоких цен покупки.</p>
+    </div>
+    <div class="city-avg-pill">
+      <div class="lbl">Средняя доходность</div>
+      <div class="val">6.66%</div>
+    </div>
+  </div>
+
+  <div class="district-tabs" id="dtabs-dubai">
+    <div class="dtab active" onclick="filterDistrict('dubai','Все',this)">Все районы</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Downtown',this)">Downtown</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Palm Jumeirah',this)">Palm Jumeirah</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Dubai Marina',this)">Dubai Marina</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Business Bay',this)">Business Bay</div>
+    <div class="dtab" onclick="filterDistrict('dubai','JLT',this)">JLT</div>
+    <div class="dtab" onclick="filterDistrict('dubai','JVC',this)">JVC</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Arjan',this)">Arjan</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Al Furjan',this)">Al Furjan</div>
+    <div class="dtab" onclick="filterDistrict('dubai','Дубай (все)',this)">Сводные данные</div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table id="tbl-dubai">
+      <thead>
+        <tr>
+          <th onclick="sortTbl('dubai',0)">Тип <span class="sa">↕</span></th>
+          <th onclick="sortTbl('dubai',1)">Район <span class="sa">↕</span></th>
+          <th class="r" onclick="sortTbl('dubai',2)">Цена покупки <span class="sa">↕</span></th>
+          <th class="r" onclick="sortTbl('dubai',3)">Аренда/мес. <span class="sa">↕</span></th>
+          <th class="r" onclick="sortTbl('dubai',4)">Аренда/год <span class="sa">↕</span></th>
+          <th class="r" onclick="sortTbl('dubai',5)">Доходность <span class="sa">↕</span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody-dubai"></tbody>
+    </table>
+  </div>
+
+  <div class="summary-row" id="sum-dubai"></div>
+</div>
+
+<!-- ── ABU DHABI ── -->
+<div class="screen" id="screen-abudhabi">
+  <div class="city-intro">
+    <div class="city-intro-left">
+      <h3>🕌 Абу-Даби</h3>
+      <p>Столица ОАЭ. Стабильный рынок с умеренной доходностью. Лучший результат у студий на Al Reem Island (7.64%) и Yas Island (7.40%). Крупные квартиры дают 5–6%.</p>
+    </div>
+    <div class="city-avg-pill">
+      <div class="lbl">Средняя доходность</div>
+      <div class="val">5.76%</div>
+    </div>
+  </div>
+  <div class="district-tabs" id="dtabs-abudhabi">
+    <div class="dtab active" onclick="filterDistrict('abudhabi','Все',this)">Все районы</div>
+    <div class="dtab" onclick="filterDistrict('abudhabi','Al Reem Island',this)">Al Reem Island</div>
+    <div class="dtab" onclick="filterDistrict('abudhabi','Al Raha Beach',this)">Al Raha Beach</div>
+    <div class="dtab" onclick="filterDistrict('abudhabi','Yas Island',this)">Yas Island</div>
+    <div class="dtab" onclick="filterDistrict('abudhabi','Абу-Даби (все)',this)">Сводные данные</div>
+  </div>
+  <div class="tbl-wrap"><table id="tbl-abudhabi"><thead><tr>
+    <th onclick="sortTbl('abudhabi',0)">Тип <span class="sa">↕</span></th>
+    <th onclick="sortTbl('abudhabi',1)">Район <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('abudhabi',2)">Цена покупки <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('abudhabi',3)">Аренда/мес. <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('abudhabi',4)">Аренда/год <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('abudhabi',5)">Доходность <span class="sa">↕</span></th>
+    <th></th>
+  </tr></thead><tbody id="tbody-abudhabi"></tbody></table></div>
+  <div class="summary-row" id="sum-abudhabi"></div>
+</div>
+
+<!-- ── RAK ── -->
+<div class="screen" id="screen-rak">
+  <div class="city-intro">
+    <div class="city-intro-left">
+      <h3>🏖️ Рас-эль-Хайма</h3>
+      <p>Развивающийся курортный эмират. Самая низкая доходность среди пяти городов. Строящийся казино-курорт Wynn может изменить рынок в 2025–2027 годах. Пока доходность 1.96%–5.80%.</p>
+    </div>
+    <div class="city-avg-pill" style="background:var(--red-bg);border-color:rgba(240,82,82,.2)">
+      <div class="lbl">Средняя доходность</div>
+      <div class="val" style="color:var(--red)">3.29%</div>
+    </div>
+  </div>
+  <div class="district-tabs" id="dtabs-rak">
+    <div class="dtab active" onclick="filterDistrict('rak','Все',this)">Все районы</div>
+    <div class="dtab" onclick="filterDistrict('rak','Al Hamra Village',this)">Al Hamra Village</div>
+    <div class="dtab" onclick="filterDistrict('rak','Al Marjan Island',this)">Al Marjan Island</div>
+    <div class="dtab" onclick="filterDistrict('rak','РАК (все)',this)">Сводные данные</div>
+  </div>
+  <div class="tbl-wrap"><table id="tbl-rak"><thead><tr>
+    <th onclick="sortTbl('rak',0)">Тип <span class="sa">↕</span></th>
+    <th onclick="sortTbl('rak',1)">Район <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('rak',2)">Цена покупки <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('rak',3)">Аренда/мес. <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('rak',4)">Аренда/год <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('rak',5)">Доходность <span class="sa">↕</span></th>
+    <th></th>
+  </tr></thead><tbody id="tbody-rak"></tbody></table></div>
+  <div class="summary-row" id="sum-rak"></div>
+</div>
+
+<!-- ── AJMAN ── -->
+<div class="screen" id="screen-ajman">
+  <div class="city-intro">
+    <div class="city-intro-left">
+      <h3>🌆 Аджман</h3>
+      <p>Самые доступные цены покупки в ОАЭ. Компактный рынок с равномерной доходностью 5.5–6% по всем типам. Привлекателен для начинающих инвесторов с ограниченным бюджетом.</p>
+    </div>
+    <div class="city-avg-pill">
+      <div class="lbl">Средняя доходность</div>
+      <div class="val">5.67%</div>
+    </div>
+  </div>
+  <div class="tbl-wrap"><table id="tbl-ajman"><thead><tr>
+    <th onclick="sortTbl('ajman',0)">Тип <span class="sa">↕</span></th>
+    <th onclick="sortTbl('ajman',1)">Район <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('ajman',2)">Цена покупки <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('ajman',3)">Аренда/мес. <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('ajman',4)">Аренда/год <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('ajman',5)">Доходность <span class="sa">↕</span></th>
+    <th></th>
+  </tr></thead><tbody id="tbody-ajman"></tbody></table></div>
+  <div class="summary-row" id="sum-ajman"></div>
+</div>
+
+<!-- ── SHARJAH ── -->
+<div class="screen" id="screen-sharjah">
+  <div class="city-intro">
+    <div class="city-intro-left">
+      <h3>🏛️ Шарджа</h3>
+      <p>Культурная столица ОАЭ. Доступные цены и стабильный спрос — многие жители работают в Дубае. Студии дают 6.66%, трёхкомнатные — 6.17%. Хороший баланс цены и доходности.</p>
+    </div>
+    <div class="city-avg-pill">
+      <div class="lbl">Средняя доходность</div>
+      <div class="val">5.85%</div>
+    </div>
+  </div>
+  <div class="tbl-wrap"><table id="tbl-sharjah"><thead><tr>
+    <th onclick="sortTbl('sharjah',0)">Тип <span class="sa">↕</span></th>
+    <th onclick="sortTbl('sharjah',1)">Район <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('sharjah',2)">Цена покупки <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('sharjah',3)">Аренда/мес. <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('sharjah',4)">Аренда/год <span class="sa">↕</span></th>
+    <th class="r" onclick="sortTbl('sharjah',5)">Доходность <span class="sa">↕</span></th>
+    <th></th>
+  </tr></thead><tbody id="tbody-sharjah"></tbody></table></div>
+  <div class="summary-row" id="sum-sharjah"></div>
+</div>
+
+<div class="source-line">
+  Источник: <a></a> Propertyfinder.ae · Q4 2025 · Все цены в AED (1 USD = 3.67 AED) · Валовая доходность до вычета расходов
+</div>
+</div><!-- /content -->
+
+<script>
+const USD = 3.67;
+const u = v => Math.round(v * USD);
+const aed = v => 'AED ' + v.toLocaleString('ru-RU');
+
+// [type, district, buyUSD, rentUSD, yieldPct]
+const RAW = {
+dubai:[
+  ['Студия','Downtown',408400,2155,6.33],
+  ['1-комн.','Downtown',612700,3570,6.99],
+  ['2-комн.','Downtown',1089200,5900,6.50],
+  ['3-комн.','Downtown',1878800,8960,5.72],
+  ['4+ комн.','Downtown',5445900,27230,6.00],
+  ['Студия','Palm Jumeirah',408440,3180,9.34],
+  ['1-комн.','Palm Jumeirah',980300,4080,4.99],
+  ['2-комн.','Palm Jumeirah',1633800,5900,4.33],
+  ['3-комн.','Palm Jumeirah',2995200,8850,3.55],
+  ['4+ комн.','Palm Jumeirah',13420000,20420,1.83],
+  ['Студия','Dubai Marina',340400,2160,7.61],
+  ['1-комн.','Dubai Marina',461500,2650,6.89],
+  ['2-комн.','Dubai Marina',734900,3740,6.11],
+  ['3-комн.','Dubai Marina',1068800,6010,6.75],
+  ['4+ комн.','Dubai Marina',2314500,9980,5.17],
+  ['Студия','Business Bay',313100,1820,6.98],
+  ['1-комн.','Business Bay',462900,2500,6.48],
+  ['2-комн.','Business Bay',708000,3740,6.34],
+  ['3-комн.','Business Bay',1130000,4990,5.30],
+  ['Студия','JLT',209700,1520,8.70],
+  ['1-комн.','JLT',389400,2200,6.78],
+  ['2-комн.','JLT',667100,3520,6.33],
+  ['3-комн.','JLT',748800,4085,6.55],
+  ['Студия','JVC',187600,1270,8.12],
+  ['1-комн.','JVC',299500,1820,7.29],
+  ['2-комн.','JVC',462600,2780,7.21],
+  ['3-комн.','JVC',626300,3630,6.96],
+  ['Студия','Arjan',186500,1290,8.30],
+  ['1-комн.','Arjan',313100,1810,6.94],
+  ['2-комн.','Arjan',463000,2520,6.53],
+  ['Студия','Al Furjan',156000,1130,8.69],
+  ['1-комн.','Al Furjan',305000,1820,7.16],
+  ['2-комн.','Al Furjan',476500,2720,6.85],
+  ['Студия','Дубай (все)',190600,1360,8.56],
+  ['1-комн.','Дубай (все)',348500,2040,7.02],
+  ['2-комн.','Дубай (все)',599000,3520,7.05],
+  ['3-комн.','Дубай (все)',1066000,5670,6.38],
+  ['4+ комн.','Дубай (все)',3051900,10890,4.28],
+],
+abudhabi:[
+  ['Студия','Al Reem Island',249800,1590,7.64],
+  ['1-комн.','Al Reem Island',353400,2170,7.37],
+  ['2-комн.','Al Reem Island',571800,2840,5.96],
+  ['3-комн.','Al Reem Island',789700,3860,5.87],
+  ['1-комн.','Al Raha Beach',462900,2500,6.48],
+  ['2-комн.','Al Raha Beach',680700,3400,5.99],
+  ['3-комн.','Al Raha Beach',957700,4080,5.11],
+  ['Студия','Yas Island',313100,1930,7.40],
+  ['1-комн.','Yas Island',462900,2160,5.60],
+  ['2-комн.','Yas Island',713400,3060,5.15],
+  ['3-комн.','Yas Island',898600,3860,5.15],
+  ['Студия','Абу-Даби (все)',266800,1550,6.97],
+  ['1-комн.','Абу-Даби (все)',408400,2150,6.32],
+  ['2-комн.','Абу-Даби (все)',633100,2950,5.59],
+  ['3-комн.','Абу-Даби (все)',871300,3860,5.32],
+  ['4+ комн.','Абу-Даби (все)',1148000,4420,4.62],
+],
+rak:[
+  ['Студия','Al Hamra Village',163400,790,5.80],
+  ['1-комн.','Al Hamra Village',326800,1090,4.00],
+  ['2-комн.','Al Hamra Village',510550,1570,3.69],
+  ['Студия','Al Marjan Island',266800,880,3.96],
+  ['1-комн.','Al Marjan Island',544600,1360,3.00],
+  ['2-комн.','Al Marjan Island',912200,1910,2.51],
+  ['Студия','РАК (все)',217300,790,4.36],
+  ['1-комн.','РАК (все)',421500,1340,3.81],
+  ['2-комн.','РАК (все)',678000,1700,3.01],
+  ['3-комн.','РАК (все)',1320600,2160,1.96],
+],
+ajman:[
+  ['Студия','Аджман',90500,450,5.97],
+  ['1-комн.','Аджман',135600,640,5.66],
+  ['2-комн.','Аджман',187200,860,5.51],
+  ['3-комн.','Аджман',285900,1320,5.54],
+],
+sharjah:[
+  ['Студия','Шарджа',122500,680,6.66],
+  ['1-комн.','Шарджа',192500,860,5.36],
+  ['2-комн.','Шарджа',272300,1180,5.20],
+  ['3-комн.','Шарджа',326800,1680,6.17],
+],
+};
+
+const sortStates = {};
+const districtFilters = {};
+const MAX_YIELD = 10;
+
+function yieldClass(y){if(y>=7)return 'hi';if(y>=5)return 'mid';return 'lo';}
+function yieldColor(y){if(y>=7)return 'var(--green)';if(y>=5)return 'var(--amber)';return 'var(--red)';}
+
+function renderTable(key){
+  const raw = RAW[key]||[];
+  const dfilter = districtFilters[key]||'Все';
+  let rows = dfilter==='Все' ? [...raw] : raw.filter(r=>r[1]===dfilter);
+  const ss = sortStates[key];
+  if(ss){
+    rows.sort((a,b)=>{
+      const av=a[ss.col],bv=b[ss.col];
+      return(typeof av==='number'?av-bv:String(av).localeCompare(String(bv),'ru'))*ss.dir;
+    });
+  }
+  const tbody = document.getElementById('tbody-'+key);
+  if(!tbody)return;
+  tbody.innerHTML = rows.map((r,i)=>{
+    const buyAED = u(r[2]);
+    const rentAED = u(r[3]);
+    const rentYearAED = rentAED*12;
+    const y = r[4];
+    const bw = Math.round(y/MAX_YIELD*100);
+    return `<tr class="${i%2===1?'even':''}">
+      <td class="td-type">${r[0]}</td>
+      <td class="td-dist">${r[1]}</td>
+      <td class="td-price">${aed(buyAED)}</td>
+      <td class="td-rent">${aed(rentAED)}</td>
+      <td class="td-rent">${aed(rentYearAED)}</td>
+      <td class="td-yield ${yieldClass(y)}">${y.toFixed(2)}%</td>
+      <td class="td-bar"><div class="yield-bar-bg"><div class="yield-bar-fill" style="width:${bw}%;background:${yieldColor(y)}"></div></div></td>
+    </tr>`;
+  }).join('');
+
+  // summary
+  const sumEl = document.getElementById('sum-'+key);
+  if(sumEl && rows.length){
+    const yields = rows.map(r=>r[4]);
+    const best = Math.max(...yields);
+    const worst = Math.min(...yields);
+    const avg = (yields.reduce((a,b)=>a+b,0)/yields.length).toFixed(2);
+    const bestRow = rows.find(r=>r[4]===best);
+    const worstRow = rows.find(r=>r[4]===worst);
+    sumEl.innerHTML=`
+      <div class="sum-card highlight">
+        <div class="sum-card-label">Лучшая доходность</div>
+        <div class="sum-card-val">${best.toFixed(2)}%</div>
+        <div class="sum-card-sub">${bestRow[0]} · ${bestRow[1]}</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Средняя (выборка)</div>
+        <div class="sum-card-val">${avg}%</div>
+        <div class="sum-card-sub">По ${rows.length} объектам</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Минимальная</div>
+        <div class="sum-card-val">${worst.toFixed(2)}%</div>
+        <div class="sum-card-sub">${worstRow[0]} · ${worstRow[1]}</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Чистая (оценка)</div>
+        <div class="sum-card-val">${(parseFloat(avg)-1.75).toFixed(2)}%</div>
+        <div class="sum-card-sub">После расходов (−1.75%)</div>
+      </div>`;
+  }
+}
+
+function filterDistrict(key, dist, btn){
+  districtFilters[key] = dist;
+  document.querySelectorAll(`#dtabs-${key} .dtab`).forEach(d=>d.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable(key);
+}
+
+function sortTbl(key, col){
+  const ss = sortStates[key];
+  if(ss&&ss.col===col){sortStates[key]={col,dir:ss.dir*-1}}
+  else{sortStates[key]={col,dir:1}}
+  const tbl = document.getElementById('tbl-'+key);
+  if(tbl){
+    tbl.querySelectorAll('thead th').forEach((th,i)=>{
+      th.classList.toggle('sorted',i===col);
+      const sa=th.querySelector('.sa');
+      if(sa)sa.textContent=i===col?(sortStates[key].dir===1?'↑':'↓'):'↕';
+    });
+  }
+  renderTable(key);
+}
+
+function switchCity(city, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(city==='info'){
+    document.getElementById('screen-info').classList.add('active');
+  } else {
+    document.getElementById('screen-'+city).classList.add('active');
+    renderTable(city);
+  }
+}
+
+// init: render Dubai and make info hidden initially
+document.getElementById('screen-info').classList.remove('active');
+document.getElementById('screen-dubai').classList.add('active');
+renderTable('dubai');
+// pre-render others for sorting
+['abudhabi','rak','ajman','sharjah'].forEach(k=>renderTable(k));
+</script>
+</body>
+</html>
