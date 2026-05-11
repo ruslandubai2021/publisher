@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Жилищная обеспеченность — Global Housing Index</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #f5f5f3;
+  --surface:   #ffffff;
+  --surface2:  #f0ede8;
+  --border:    #e0ddd8;
+  --border2:   #c8c4be;
+  --text:      #1a1814;
+  --text2:     #6b6760;
+  --text3:     #a8a49f;
+  --accent:    #2563eb;
+  --head-bg:   #ffffff;
+  --row-hover: #faf9f7;
+
+  --low:    #16a34a;
+  --low-bg: rgba(22,163,74,0.08);
+  --mid:    #d97706;
+  --mid-bg: rgba(217,119,6,0.08);
+  --high:   #dc2626;
+  --high-bg:rgba(220,38,38,0.08);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+.header{
+  background:var(--head-bg);border-bottom:1px solid var(--border);
+  padding:14px 20px 12px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.badge-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.badge{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;
+  text-transform:uppercase;padding:2px 8px;border-radius:3px;
+  border:1px solid var(--border2);color:var(--text2);
+}
+h1{font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--text)}
+h1 span{color:var(--text2);font-weight:300}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.update-label{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.update-label strong{color:var(--accent);font-weight:500}
+.delay-note{font-size:11px;color:var(--text3);font-style:italic}
+
+.controls{
+  padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+}
+.search-wrap{position:relative;flex:1;min-width:160px;max-width:260px}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+input[type=search]{
+  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;
+  padding:6px 10px 6px 30px;font-family:var(--sans);font-size:12px;color:var(--text);
+  outline:none;transition:border-color .15s;
+}
+input[type=search]:focus{border-color:var(--border2)}
+input[type=search]::placeholder{color:var(--text3)}
+select{
+  background:var(--surface2);border:1px solid var(--border);border-radius:5px;
+  padding:6px 26px 6px 10px;font-family:var(--sans);font-size:12px;color:var(--text);
+  outline:none;appearance:none;cursor:pointer;transition:border-color .15s;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555c70'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+select:focus{border-color:var(--border2)}
+.controls-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.count{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.count strong{color:var(--text2)}
+
+.legend{
+  padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+.table-wrap{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 160px)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+col.c-country{width:170px}
+col.c-units{width:110px}
+col.c-pop{width:120px}
+col.c-index{width:100px}
+col.c-source{width:auto}
+
+thead{position:sticky;top:0;z-index:10;background:var(--head-bg)}
+thead tr.col-headers th{
+  padding:8px 12px;font-size:11px;font-weight:500;color:var(--text2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  cursor:pointer;white-space:nowrap;user-select:none;transition:color .12s;
+}
+thead tr.col-headers th:hover{color:var(--text)}
+thead tr.col-headers th .sort-arrow{display:inline-block;margin-left:4px;opacity:0;font-size:10px;transition:opacity .12s}
+thead tr.col-headers th:hover .sort-arrow,
+thead tr.col-headers th.sorted .sort-arrow{opacity:1;color:var(--accent)}
+thead tr.col-headers th.sorted{color:var(--accent)}
+thead tr.col-headers th.right{text-align:right}
+
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr.even{background:rgba(255,255,255,.012)}
+tbody tr.even:hover{background:var(--row-hover)}
+
+td{padding:8px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.country-cell{font-weight:500;color:var(--text);font-size:13px}
+td.num-cell{font-family:var(--mono);font-size:12px;text-align:right;color:var(--text2)}
+td.index-cell{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right}
+td.index-cell.low{color:var(--low);background:var(--low-bg)}
+td.index-cell.mid{color:var(--mid);background:var(--mid-bg)}
+td.index-cell.high{color:var(--high);background:var(--high-bg)}
+td.source-cell{font-size:11px;color:var(--text3);white-space:normal;line-height:1.4}
+
+.no-results{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+
+.table-wrap::-webkit-scrollbar{width:6px;height:6px}
+.table-wrap::-webkit-scrollbar-track{background:var(--surface)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="badge-row">
+      <span class="badge">Глобальный</span>
+      <span class="badge">Жилищный рынок</span>
+    </div>
+    <h1>Жилищная обеспеченность <span>/ Global Housing Index</span></h1>
+  </div>
+  <div class="header-right">
+    <span class="update-label">Данные: <strong>2003–2025</strong></span>
+    <span class="delay-note">Источники: ООН, национальные переписи, оценки</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="search" placeholder="Поиск по стране…" autocomplete="off">
+  </div>
+  <select id="index-filter">
+    <option value="">Все значения индекса</option>
+    <option value="low">Низкий (&lt; 3,0)</option>
+    <option value="mid">Средний (3,0–4,5)</option>
+    <option value="high">Высокий (&gt; 4,5)</option>
+  </select>
+  <div class="controls-right">
+    <span class="count" id="count-label"><strong>15</strong> стран</span>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:var(--low)"></span>Низкий индекс &lt; 3,0 — высокая обеспеченность</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--mid)"></span>Средний 3,0–4,5</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--high)"></span>Высокий &gt; 4,5 — низкая обеспеченность</span>
+</div>
+
+<div class="table-wrap">
+<table>
+<colgroup>
+  <col class="c-country">
+  <col class="c-units">
+  <col class="c-pop">
+  <col class="c-index">
+  <col class="c-source">
+</colgroup>
+<thead>
+  <tr class="col-headers">
+    <th data-col="0">Страна <span class="sort-arrow">↕</span></th>
+    <th data-col="1" class="right">Жилых юнитов, млн <span class="sort-arrow">↕</span></th>
+    <th data-col="2" class="right">Население, млн <span class="sort-arrow">↕</span></th>
+    <th data-col="3" class="right">Индекс чел./юнит <span class="sort-arrow">↕</span></th>
+    <th data-col="4">Источник и актуальность <span class="sort-arrow">↕</span></th>
+  </tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+const RAW = [
+  ["США",         125.74, 330.66, 2.49, "Таблица ООН (2020); свежие переписные данные, актуально с учётом роста населения"],
+  ["Япония",      54.31,  125.80, 2.26, "Перепись Японии 2020 в ООН; население сокращается, индекс стабилен"],
+  ["Германия",    40.62,  83.12,  2.05, "Перепись 2011; более новые оценки подтверждают ~2,0–2,1"],
+  ["Франция",     30.24,  67.15,  2.22, "Данные 2015; средний размер домохозяйства ~2,2 актуален"],
+  ["Великобритания", 29.49, 66.80, 2.27, "Перепись 2011; рост домохозяйств не меняет индекс существенно"],
+  ["Италия",      25.02,  60.03,  2.40, "Данные 2011; демографическое старение улучшает индекс"],
+  ["Канада",      15.62,  38.25,  2.45, "Перепись 2016; ~2,4–2,5 на 2025"],
+  ["Австралия",   10.22,  25.60,  2.50, "Данные 2011; устойчивый ~2,5"],
+  ["Южная Корея", 23.65,  51.58,  2.18, "Свежие данные 2022; наиболее актуально"],
+  ["Испания",     17.57,  47.33,  2.69, "Перепись 2011; ~2,5–2,7 стабильно"],
+  ["Китай",       523.0,  1410.0, 2.70, "Согласованные ООН/2025; хорошо актуально"],
+  ["Саудовская Аравия", 8.3, 32.0, 3.95, "Перепись 2022 + оценки ~4 чел./домохозяйство; актуально"],
+  ["Индонезия",   69.9,   269.6,  3.90, "Оценка 2025; надёжный индекс"],
+  ["ОАЭ",         2.3,    11.35,  4.90, "Оценка 2025 по населению и ~5 чел./домохозяйство; миграция завышает индекс"],
+  ["Оман",        0.55,   4.45,   8.00, "Старые данные ООН 2003; исторически низкая обеспеченность"],
+];
+
+function indexClass(v){
+  if(v < 3.0) return 'low';
+  if(v <= 4.5) return 'mid';
+  return 'high';
+}
+
+function fmt(v){ return v.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) }
+
+let sortCol=-1, sortDir=1;
+
+function render(rows){
+  const tbody = document.getElementById('tbody');
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="5" class="no-results">Нет стран, соответствующих фильтрам.</td></tr>`;
+    document.getElementById('count-label').innerHTML=`<strong>0</strong> стран`;
+    return;
+  }
+  document.getElementById('count-label').innerHTML=`<strong>${rows.length}</strong> из ${RAW.length} стран`;
+  tbody.innerHTML = rows.map((r,i)=>`
+<tr class="${i%2===1?'even':''}">
+  <td class="country-cell">${r[0]}</td>
+  <td class="num-cell">${fmt(r[1])}</td>
+  <td class="num-cell">${fmt(r[2])}</td>
+  <td class="index-cell ${indexClass(r[3])}">${fmt(r[3])}</td>
+  <td class="source-cell">${r[4]}</td>
+</tr>`).join('');
+}
+
+function applyFilters(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const f = document.getElementById('index-filter').value;
+  let rows = RAW.filter(r=>{
+    if(q && !r[0].toLowerCase().includes(q)) return false;
+    if(f){
+      const c = indexClass(r[3]);
+      if(f !== c) return false;
+    }
+    return true;
+  });
+  if(sortCol >= 0){
+    rows.sort((a,b)=>{
+      const av=a[sortCol], bv=b[sortCol];
+      if(typeof av === 'number') return (av-bv)*sortDir;
+      return String(av).localeCompare(String(bv),'ru')*sortDir;
+    });
+  }
+  render(rows);
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('index-filter').addEventListener('change', applyFilters);
+
+document.querySelectorAll('thead th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col = parseInt(th.dataset.col);
+    if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=1}
+    document.querySelectorAll('thead th').forEach(t=>{
+      t.classList.remove('sorted');
+      t.querySelector('.sort-arrow').textContent='↕';
+    });
+    th.classList.add('sorted');
+    th.querySelector('.sort-arrow').textContent = sortDir===1?'↑':'↓';
+    applyFilters();
+  });
+});
+
+render(RAW);
+</script>
+</body>
+</html>
